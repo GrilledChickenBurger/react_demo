@@ -1,0 +1,58 @@
+
+.mapContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 60vh;
+  width: 100vw;
+  padding: 2%;
+  box-sizing: border-box; /* 让宽度包含padding和border */
+}
+
+.mapContainer >.mapView {
+  height:100%;
+  width:100%;
+  box-sizing: border-box; /* 让宽度包含padding和border */
+}
+
+.introContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 20vw;
+  min-width: 300px;
+  padding: 20px;
+}
+.introContent >h3 {
+  text-align: center;
+  font-size: 1.5em;
+
+}
+.introContent >p {
+  text-align: left;
+  text-indent: 2ch;
+  font-size: 1em;
+  line-height: 1.5em;
+}
+/* #introduction{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  text-align: left;
+  text-indent: 2ch; 
+} */
+
+
+
+/* .esri-view .esri-view-root{
+  display: flex;
+  flex:100%;
+} */

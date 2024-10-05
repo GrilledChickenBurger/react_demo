@@ -1,0 +1,34 @@
+
+.mapTifView {
+  height: 100%;
+  width: 50%;
+  float:left;
+  padding: 10px;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.mapView {
+    height: 100%;
+    width: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+    /* 让宽度包含padding和border */
+  }
+  
+  
+  
+  .selectBoxContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  
+    min-width: 200px;
+    padding: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }

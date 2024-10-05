@@ -1,0 +1,113 @@
+.sliderContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; /* 中心对齐 */
+    
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    width: 100%;
+    padding: 10px;
+    margin: 10px 5px; /* 中心对齐到父元素 */
+}
+.sliderBar{
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中心对齐 */
+    justify-content: center; /* 居中 */
+    margin: 3% 1% 0;
+    padding: 0;
+    width:95%;
+    box-sizing: border-box; /* 边框盒模型 */
+}
+
+.slider{
+    width:100%;
+}
+
+.sliderScaleContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 20px; /* 高度可根据需要调整 */
+    margin-top: 3px; /* 与滑块的间距 */
+}
+
+.scaleMark {
+    text-align: center; /* 文字居中 */
+    /* transform: translateX(50%);  */
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.scaleLine {
+    width: 2px; /* 刻度线的宽度 */
+    height: 10px; /* 刻度线的高度 */
+    background-color: #4CAF50; /* 刻度线的颜色 */
+}
+
+.silderGoto{
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* 中心对齐 */
+    justify-content: center; /* 居中 */
+    margin: 0 1%;
+    padding: 0;
+    width:25%;
+    box-sizing: border-box; /* 边框盒模型 */
+
+}
+
+
+input[type="range"] {
+    -webkit-appearance: none; /* 去掉默认样式 */
+    appearance: none; /* 兼容其他浏览器 */
+    width: 100%; /* 输入范围填满容器 */
+    margin: 5px 0; /* 上下外边距 */
+    background: #ddd; /* 背景颜色 */
+    height: 8px; /* 高度 */
+    border-radius: 5px; /* 圆角 */
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* 去掉默认样式 */
+    appearance: none; /* 兼容其他浏览器 */
+    width: 20px; /* 滑块宽度 */
+    height: 20px; /* 滑块高度 */
+    border-radius: 50%; /* 圆形 */
+    background: #4CAF50; /* 滑块颜色 */
+    cursor: pointer; /* 鼠标样式 */
+}
+
+input[type="number"] {
+    width: 60%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-right:1px;
+    border-radius: 5px;
+}
+
+.sliderContainer button {
+    /* height: 25px; */
+    padding: 3px 5px; /* 内边距 */
+    border: none; /* 去掉边框 */
+    border-radius: 5px; /* 圆角 */
+    background-color: #4CAF50; /* 按钮背景色 */
+    color: white; /* 字体颜色 */
+    cursor: pointer; /* 鼠标样式 */
+    white-space: nowrap; /* 防止文本换行 */
+    font-size:1em;
+}
+
+.sliderContainer button:hover {
+    background-color: #45a049; /* 鼠标悬停效果 */
+}
+
+.sliderContainer button:focus {
+    outline: none; /* 去掉聚焦边框 */
+}

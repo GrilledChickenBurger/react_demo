@@ -1,0 +1,55 @@
+.header {
+  display: flex; /* 使用Flexbox布局 */
+  justify-content: space-between; /* 使内容两端对齐 */
+  align-items: center; /* 垂直居中对齐 */
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  height: 15vh;
+  width:100%; /* 宽度 */
+  padding: 1% 4%;
+  box-sizing: border-box; /* 让宽度包含padding和border */
+
+  background-color: #f1f1f1; /* 背景颜色 */
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.2); /* 添加阴影效果 */
+  
+}
+.header .navbar{
+  display: flex; /* 使用Flexbox布局 */
+  justify-content: space-evenly; /* 使内容两端对齐 */
+  align-items: center; /* 垂直居中对齐 */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5em; /* 字体大小 */
+  font-weight:bold; /* 字体粗细 */
+}
+.dropdownContainer {
+  position: relative; /* 设置父元素相对定位 */
+}
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 150px;
+  background-color: #fff; /* 背景颜色 */
+  display: inline-block; /* 内联块 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* 投影效果 */
+  z-index: 1000; /* 确保显示在其他元素之上 */
+}
+.dropdownItem {
+  display: block; /* 每项占一行 */
+  padding: 10px;
+  text-decoration: none; /* 去掉下划线 */
+  color: hsl(0, 0%, 20%);
+  font-size: 0.8em; /* 字体大小 */
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  background-color: hsl(0, 0%, 90%); /* 悬浮效果 */
+}
+
+  header a {
+    margin: 10px; /* 定义链接之间的间距 */
+    text-decoration: none; /* 去掉下划线 */
+    color: #333; /* 文字颜色 */
+  }

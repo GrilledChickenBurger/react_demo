@@ -1,0 +1,17 @@
+.mapContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+    height: 60vh;
+    width: 100vw;
+    padding: 2%;
+    box-sizing: border-box; /* 让宽度包含padding和border */
+  }
+  
+  .mapContainer >.mapView {
+    height:100%;
+    width:100%;
+    box-sizing: border-box; /* 让宽度包含padding和border */
+  }

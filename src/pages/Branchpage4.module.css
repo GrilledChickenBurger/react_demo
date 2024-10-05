@@ -1,0 +1,98 @@
+
+.allContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  height: 70vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.mapContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 70%;
+  padding: 2%;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.sideSpanContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 30%;
+  /* padding: 2%; */
+  margin-right: 4%;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.sideSpanContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.sideSpanTitle {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: center;
+
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.sideSpan {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+
+  width: 100%;
+}
+.selectBoxContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+}
+.selectBoxContainer p{
+  text-wrap: nowrap;
+  font-size: medium;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+  margin-top: 2%;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+

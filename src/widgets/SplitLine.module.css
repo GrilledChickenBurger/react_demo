@@ -1,0 +1,29 @@
+.separator {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    text-align: center; /* 文本居中 */
+    margin: 20px 0; /* 在上下增加间距 */
+}
+
+.separator::before{
+    content: "";
+    flex-grow: 1; /* 让前后的伪元素占据可用空间 */
+    height: 2px;
+    width:40vw;
+    background: linear-gradient(to left, #ccc, transparent);
+    margin: 0 10px; 
+}
+.separator::after {
+    content: "";
+    flex-grow: 1; /* 让前后的伪元素占据可用空间 */
+    height: 2px;
+    width:40vw;
+    background: linear-gradient(to right, #ccc, transparent); /* 线的颜色 */
+    margin: 0 10px; 
+}
+
+.separatorText {
+    padding: 0 10px; /* 文本与线的间距 */
+    color: gray; /* 文本颜色 */
+    font-weight: bold; /* 粗体 */
+}

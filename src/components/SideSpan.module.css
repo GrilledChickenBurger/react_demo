@@ -1,0 +1,21 @@
+.sideSpanContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width:80%;
+}
+
+.sideSpan {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+
+  width: fit-content;
+}
+

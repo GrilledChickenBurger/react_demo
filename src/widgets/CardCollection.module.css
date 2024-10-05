@@ -1,0 +1,25 @@
+.cardCollectionContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
+
+  width: 100vw;
+  padding: 20px;
+  box-sizing: border-box; /* 让宽度包含padding和border */
+
+}
+
+
+
+.cardCollection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden; 
+
+  /* width: 100%;
+  height: 100%; */
+  /* padding: 5%; */
+  /* box-sizing: border-box; 让宽度包含padding和border */
+}
