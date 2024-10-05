@@ -1,4 +1,5 @@
-
+import React, { useContext } from "react";
+import { VersionContext } from "../App.jsx";
 
 import Header from '../components/Header.jsx'
 import Footer from '../components/Footer.jsx'
@@ -16,26 +17,28 @@ import Img4 from '../assets/4_relationship.png'
 function FrontPage() {
     const cardsinfo = [
         {
-            img: { src: Img1, alt: "Card 1" }, title: "1. Sustainable Assessment",
-            description: "Sustainable assessment is a process of identifying and analyzing the environmental, social, and economic factors that contribute to the development of a particular area or region.",
+            img: { src: Img1, alt: "Card 1" }, title: "1. 历史现状评估———可持续评估",
+            description: ["1) 展示长三角27个城市的各指标评估结果；","2) 展示湖州市各行政村的人口、游客量、收入、耕地、林地等数据，均与可持续评估结果正相关。",],
             address: '/branch1',
         },
         {
-            img: { src: Img2, alt: "Card 2" }, title: "2. Landscape Pattern",
-            description: "Landscape patterns are a type of visual art that use geometric shapes and colors to create a visual image.",
+            img: { src: Img2, alt: "Card 2" }, title: "2. 历史现状评估———景观格局",
+            description: ["展示从1975年开始，湖州市南浔区的遥感解译数据，以及桑基鱼塘景观的面积、形态、N元素、景观格局指数等。",],
             address: '/branch2',
         },
         {
-            img: { src: Img3, alt: "Card 3" }, title: "3. Ecosystem Services",
-            description: "Ecosystem services are a set of ecological services that are provided by nature to human beings and the environment.",
+            img: { src: Img3, alt: "Card 3" }, title: "3. 历史现状评估———生态系统服务分析",
+            description: ["展示湖州市南浔区的生态系统服务分析，以及进一步分析结果（生态系统服务的热点分析、多利益相关者对生态系统服务的态度）。",],
             address: '/branch3',
         },
         {
-            img: { src: Img4, alt: "Card 4" }, title: "4. Relationships Analysis",
-            description: "Relationships analysis is a process of identifying and analyzing the interdependencies between different stakeholders in a particular area or region.",
+            img: { src: Img4, alt: "Card 4" }, title: "4. 景观格局与生态系统服务的关系",
+            description: ["展示六种生态系统服务的定性关系式提取，展示桑基减少、鱼塘面积增加对各服务的影响。",],
             address: '/branch4',
         },
     ];
+
+    const version = useContext(VersionContext);
 
     return (
         <div className={styles.FrontPage}>
@@ -45,7 +48,7 @@ function FrontPage() {
             <CardCollection items={cardsinfo} />
             
             {/* <MyMapViewer /> */}
-            <Footer />
+            <Footer version={version}/>
         </div>
     )
 }

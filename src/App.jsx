@@ -1,3 +1,4 @@
+import { createContext } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import BranchPage1 from './pages/Branchpage1';
 import BranchPage2 from './pages/Branchpage2';
@@ -31,10 +32,14 @@ const router = createBrowserRouter([
   }
 ]);
 
+export const VersionContext = createContext();
+
 function App() {
 
   return (
-    <RouterProvider router={router} />
+    <VersionContext.Provider value={'0.8.0'}>
+      <RouterProvider router={router} />
+    </VersionContext.Provider>
   );
 }
 

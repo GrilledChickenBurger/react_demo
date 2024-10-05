@@ -95,4 +95,10 @@
   box-sizing: border-box;
   /* 让宽度包含padding和border */
 }
+.resultContent{
+  display: flex;
+  flex-direction:row;
+  justify-content: center;
+  align-items: center;
+}
 

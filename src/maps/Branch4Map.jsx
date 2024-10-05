@@ -28,7 +28,7 @@ let record_layerview;
 
 export default function Branch4Map(props) {
     let { mapProps, viewProps, setResult } = props;
-    let { cur_option} = viewProps;
+    let { cur_option } = viewProps;
 
     const [view2015, setView2015] = useState(null); // 左侧view: service_group
     const [view, setView] = useState(null); // 右侧view: farmer+enterprise+tourist
@@ -193,24 +193,24 @@ export default function Branch4Map(props) {
         record_layer.visible = false;
         record_layer = new_layer;
         console.log("--找到一致图层，当前图层id：" + record_layer.id);
-        
+
     }
-        
+
 
 
     function update_cur_layerview() {
-        view.whenLayerView(record_layer).then((layerview) => {
-            record_layerview = layerview;
-            console.log("更新layerview");
+        view2015.whenLayerView(record_2015_layer).then((layerview) => {
+            record_2015_layerview = layerview;
+            console.log("更新2015layerview");
 
             // if (cur_option.includes("landuse")) {
             //     filter_layerview(cur_option);
             // }
         });
 
-        view2015.whenLayerView(record_2015_layer).then((layerview) => {
-            record_2015_layerview = layerview;
-            console.log("更新2015layerview");
+        view.whenLayerView(record_layer).then((layerview) => {
+            record_layerview = layerview;
+            console.log("更新layerview");
 
             if (cur_option.includes("landuse")) {
                 filter_layerview(cur_option);
@@ -257,24 +257,36 @@ export default function Branch4Map(props) {
                     let area = feature.attributes.面积;
                     // console.log("type: " + type + ", area: " + area);
                     uniqueTypes.add(type);
-    
+
                     areaByTypes[type] = (areaByTypes[type] || 0) + area;
                 });
                 console.log(areaByTypes);
-                
+
                 let cur_content = "<ul>" +
                     "<p><b>南浔区" + layerview.layer.title + "</b></p>";
-                    if (uniqueTypes.has(2)) {
-                        cur_content +=
-                            "<li>桑园面积：" + areaByTypes[2].toFixed(2) + " 平方米</li>";
-                    }
-                    if (uniqueTypes.has(3)) {
-                        cur_content +=
-                            "<li>水田面积：" + areaByTypes[3].toFixed(2) + " 平方米</li>";
-                    }
-                    if (uniqueTypes.has(1)) {
-                        cur_content +=
-                            "<li>鱼塘面积：" + areaByTypes[1].toFixed(2) + " 平方米</li>";
+                if (uniqueTypes.has(2)) {
+                    cur_content +=
+                        "<li>桑园面积：" + areaByTypes[2].toFixed(2) + " 平方米</li>";
+                }
+                if (uniqueTypes.has(3)) {
+                    cur_content +=
+                        "<li>水田面积：" + areaByTypes[3].toFixed(2) + " 平方米</li>";
+                }
+                if (uniqueTypes.has(1)) {
+                    cur_content +=
+                        "<li>鱼塘面积：" + areaByTypes[1].toFixed(2) + " 平方米</li>";
+                }
+                if (uniqueTypes.has(4)) {
+                    cur_content +=
+                        "<li>建设用地面积：" + areaByTypes[4].toFixed(2) + " 平方米</li>";
+                }
+                if (uniqueTypes.has(5)) {
+                    cur_content +=
+                        "<li>其他农用地面积：" + areaByTypes[5].toFixed(2) + " 平方米</li>";
+                }
+                if (uniqueTypes.has(6)) {
+                    cur_content +=
+                        "<li>未利用地面积：" + areaByTypes[6].toFixed(2) + " 平方米</li>";
                 }
                 cur_content += "</ul>";
                 resultcontent += cur_content;

@@ -17,7 +17,7 @@ function Card(props) {
     //     // alert('Card Clicked');
 
     // }
-    const handleClick = (e) => { 
+    const handleClick = (e) => {
         // alert('Card Clicked');
         console.log('Card Clicked');
         // console.log(e);
@@ -28,19 +28,26 @@ function Card(props) {
         <div className={styles.card} onClick={handleClick}>
             <img className={styles.cardImg} src={Img.src} alt={Img.alt}></img>
             <h2 className={styles.cardTitle} ><Link to={address}>{title}</Link></h2>
-            <p className={styles.cardText}>{description}</p>
+            <div className={styles.cardText}>
+                {description.map((desc, index) => (
+                    <p key={index}>{desc}</p> // 逐个渲染每个字符串为段落
+                ))}
+            </div>
         </div>
     );
 }
 Card.propTypes = {
     title: propType.string,
-    description: propType.string,
+    description: propType.oneOfType([
+        propType.string,
+        propType.arrayOf(propType.string) // 允许是字符串数组
+    ]),
     address: propType.string,
 }
 
 Card.defaultProps = {
     title: 'Card Title',
-    description: 'Card Description',
+    description: ['Card Description'],
     address: '#',
     img: {
         src: 'https://via.placeholder.com/150',

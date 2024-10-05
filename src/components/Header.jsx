@@ -10,32 +10,29 @@ function Header() {
     setDropdownOpen(!isDropdownOpen);
   };
   let dropdownItems = [
-    { value: "s1", label: "Service 1", href: "#card-collection" },
-    { value: "s2", label: "Service 2", href: "#card-collection" },
-    { value: "s3", label: "Service 3", href: "#card-collection" },
-    { value: "s4", label: "Service 4", href: "#card-collection" },
+    { value: "s1", label: "可持续评估", href: "/branch1" },
+    { value: "s2", label: "景观格局评估", href: "/branch2" },
+    { value: "s3", label: "生态系统服务分析", href: "/branch3" },
+    { value: "s4", label: "格局-服务-福祉关系分析", href: "/branch4" },
   ];
 
   return (
     <header className={styles.header}>
-      <h1>Geo App</h1>
+      <h1 style={{fontSize: '2rem'}}>地理设计平台原型系统</h1>
       <nav className={styles.navbar}>
-        <a href="/">Home</a>
-        <a href="#">About</a>
+        <a href="/">主页</a>
         <div className={styles.dropdownContainer}>
-          <a href="#" onClick={toggleDropdown}>Menu</a>
+          <a href="#" onClick={toggleDropdown}>数据评估</a>
           {isDropdownOpen && (
             <div className={styles.dropdown}>
               {dropdownItems.map(item => (
-                <a key={item.value} href={item.href} className={styles.dropdownItem} onClick={toggleDropdown}>
-                  {item.label}
-                </a>
+                <Link to={item.href} className={styles.dropdownItem} onClick={toggleDropdown}>{item.label}</Link>
               ))}
             </div>
           )}
         </div>
-
-        <a href="#">Contact</a>
+        <a href="#">关于</a>
+        <a href="#">联系我们</a>
       </nav>
     </header>
 

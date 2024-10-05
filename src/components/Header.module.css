@@ -5,7 +5,7 @@
 
   font-family: Arial, Helvetica, sans-serif;
 
-  height: 15vh;
+  height: 10vh;
   width:100%; /* 宽度 */
   padding: 1% 4%;
   box-sizing: border-box; /* 让宽度包含padding和border */
@@ -40,7 +40,7 @@
   padding: 10px;
   text-decoration: none; /* 去掉下划线 */
   color: hsl(0, 0%, 20%);
-  font-size: 0.8em; /* 字体大小 */
+  font-size: medium; /* 字体大小 */
   cursor: pointer;
 }
 
@@ -52,4 +52,5 @@
     margin: 10px; /* 定义链接之间的间距 */
     text-decoration: none; /* 去掉下划线 */
     color: #333; /* 文字颜色 */
+    font-weight: bold;
   }

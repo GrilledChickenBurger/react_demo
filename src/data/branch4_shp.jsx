@@ -25,6 +25,7 @@ export const lu_2015 = new FeatureLayer({
     id: "2015",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
     popupTemplate: lu_popup_template,
+    visible: false,
 });
 export const lu_2019 = new FeatureLayer({
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/nanxun2019_lu_1/FeatureServer",
@@ -32,4 +33,5 @@ export const lu_2019 = new FeatureLayer({
     id: "2019",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
     popupTemplate: lu_popup_template,
+    visible: false,
 });
