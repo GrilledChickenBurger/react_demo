@@ -10,11 +10,11 @@ const Branch4Map = lazy(() => import('../maps/Branch4Map.jsx'));
 import { VersionContext } from "../App.jsx";
 
 const option_info = [
+    { value: "landuse_all", label: "南浔区——总体土地利用情况" },
     { value: "landuse_1-2-3", label: "南浔区——桑基鱼塘分布情况" },
     { value: "landuse_2", label: "南浔区——桑园分布情况" },
     { value: "landuse_3", label: "南浔区——水田分布情况" },
     { value: "landuse_1", label: "南浔区——鱼塘分布情况" },
-    { value: "landuse_1-2-3-4-5-6", label: "南浔区—总体土地利用情况" },
 ];
 
 
@@ -75,11 +75,11 @@ function SideSpan({ cur_option, setCurOption }) {
         单击地图，可查看具体位置的详细数据。</b></>;
     const guide = <b>
         <li>左上：2015年南浔区土地利用；</li>
-        <li>左下：2015年南浔区ES图；</li>
+        <li>左下：2015年南浔区ES图；（直方图，待补充）</li>
         <li>右上：2019年南浔区土地利用；</li>
-        <li>右下：2019年南浔区ES图。</li></b>
+        <li>右下：2019年南浔区ES图。（直方图，待补充）</li></b>
 
-    const option_label = cur_option === "landuse_1-2-3-4-5-6" ? "总体土地利用" :
+    const option_label = cur_option === "landuse_all" ? "总体土地利用" :
                         cur_option === "landuse_1-2-3" ? "桑基鱼塘分布" :
                         cur_option === "landuse_2" ? "桑园分布" :
                         cur_option === "landuse_3" ? "水田分布" :

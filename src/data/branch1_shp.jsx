@@ -22,7 +22,7 @@ const showALL = {
 const lu_popup_template = {
     // autocasts as new PopupTemplate()
     title: "湖州{SJNF}各行政村信息",
-    actions: [showOnly,showOnlyCity, showALL],
+    actions: [showOnly, showALL],
     content: [{
         type: "text",
         text: "",
