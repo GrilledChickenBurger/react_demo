@@ -1,21 +1,14 @@
-.mapTifViewContainer{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+
+.mapSimulateView {
   height: 100%;
-  width:50%;
-}
-.mapTifView {
-  height: 50%;
-  width: 100%;
+  width: 50%;
   float:left;
   padding: 10px;
   box-sizing: border-box;
   /* 让宽度包含padding和border */
 }
 
-.mapView {
+.mapRealView {
     height: 100%;
     width: 50%;
     padding: 10px;
@@ -35,7 +28,7 @@
     padding: 10px;
     font-size: 1.5em;
     font-weight: bold;
-    background-color: rgba(255, 255, 255, 1);
-    border-radius: 0px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }

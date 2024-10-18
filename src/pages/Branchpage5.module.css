@@ -1,0 +1,239 @@
+.introContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  /* height: 80vh; */
+  /* width: 100vw; */
+  margin: 0;
+  padding: 1% 3%;
+
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.introTitle {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.introContent{
+  margin-right:auto; /* 左对齐 */
+}
+.introContent li{
+  margin-left:10px;
+}
+.introlist{
+  border-left: 2px solid #000;
+  text-wrap: normal;
+}
+.introlist p{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.coreplusContainer{
+  display: flex;
+  flex-direction: column;
+}
+.stepContainer{
+  display: flex;
+  margin:2%;
+  padding:10px 4%;
+  border: skyblue 3px solid;
+  border-radius: 5px;
+  background-color: lightblue;
+}
+.coreContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  /* height: 80vh; */
+  width: 100%;
+  aspect-ratio: 16/9;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8); /* 半透明背景，提供模糊效果 */
+  backdrop-filter: blur(5px); /* 背景模糊处理 */
+  display: flex; /* 使用 flexbox 布局以便居中内容 */
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* 确保在最上层 */
+}
+
+.loadingText {
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 居中显示文本 */
+  background: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.mapContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 70%;
+  padding: 2%;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.sideSpanContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 30%;
+  padding: 2%;
+  margin-right: 2%;
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.sideSpanContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.sideSpanTitle {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: center;
+
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.sideSpan {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+
+  width: 100%;
+}
+.paramSettingContainer{
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-right: auto;
+  width: 100%;
+}
+.paramSettingContainer p{
+  text-wrap: nowrap;
+  font-size: medium;
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: auto;
+}
+.inputContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  max-width: 100%;
+}
+
+.infoOpenButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  font-size: small;
+  font-weight: lighter;
+  cursor: pointer;
+}
+.infoOpenButton:hover{
+  color: skyblue;
+  background-color: #fff;
+}
+.infoConfirmContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 20px;
+}
+.infoConfirmButton{
+  display: flex;
+  justify-content: center;
+  text-align: right;
+  background-color: steelblue;
+  color: white;
+  border-radius: 5px;
+  padding: 0.6em  1.2em;
+  font-size: 1em;
+}
+.infoConfirmButton:hover{
+  background-color: darkblue;
+}
+.finalButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100% ;
+  background-color: green;
+  color: white;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.finalModal{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:0 2%;
+  box-sizing: border-box;
+}
+.finalModalItem{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* margin-bottom: 20px; */
+}
+.finalModalItemTitle{
+  font-size: 1rem;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+.finalModalItemContent{
+  margin:0 20px;
+}

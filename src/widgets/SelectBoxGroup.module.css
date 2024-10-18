@@ -1,0 +1,15 @@
+
+.selectBox {
+    min-width: 100px;
+    width:100%;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px;
+  }
+  
+.selectBoxLabel {
+    font-size: 1em;
+    margin-bottom: 10px;
+}

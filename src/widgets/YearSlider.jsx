@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import styles from './YearSlider.module.css';
 
 export default function YearSlider(props) {
-    const { startYear, endYear, handleYearChange, yearNodes, slideStep } = props.settings;
+    const { startYear, endYear, handleYearChange, yearNodes, slideStep, initYear } = props.settings;
     // 定义节点
     const defaultNodes = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
     const nodes = yearNodes && yearNodes.length > 0 && yearNodes[0] === startYear && yearNodes[yearNodes.length - 1] === endYear
@@ -15,9 +15,21 @@ export default function YearSlider(props) {
     const [isPlaying, setIsPlaying] = useState(false); // 自动播放状态
     const [inputValue, setInputValue] = useState('');
 
-    const [scaleMarkWidth, setScaleMarkWidth] = useState(0);
     const scaleMarkRef = useRef(null);
-    let scaleMarkPercentage;
+
+    useEffect(() => {
+        console.log("INSIDE YEAR SLIDER, init year change: " + initYear);
+        if (initYear !== undefined && initYear != null) {
+            const valid_initYear = initYear < startYear ? startYear :
+                initYear > endYear ? endYear : initYear;
+
+            const index = nodes.indexOf(valid_initYear);
+            setCurrentIndex(index !== -1 ? index : currentIndex);
+            setCurrentValue(valid_initYear);
+            // console.log("init year: " + initYear +
+            //         ",Valid init year: " + valid_initYear);
+        }
+    }, [initYear]);
 
     useEffect(() => {
         let interval;
@@ -41,7 +53,7 @@ export default function YearSlider(props) {
                     }
                 });
                 handleYearChange(currentValue);
-                
+
             }, 1000); // 每秒更新一次
         }
 
@@ -50,20 +62,16 @@ export default function YearSlider(props) {
         };
     }, [isPlaying]);
 
+    // 10.13 注释原因：只有用户通过拉杆改变节点值时才需要触发handleYearChange，
+    //          而通过选择改变initYear从而造成的节点值变化不需要触发handleYearChange
+    // 10.14 后续发现当时报错不是这边的原因 (;_;)
     useEffect(() => {
         handleYearChange(currentValue);
     }, [currentValue]);
 
-    useEffect(() => {
-        // 获取 scaleMark 的宽度并设置
-        if (scaleMarkRef.current) {
-            setScaleMarkWidth(scaleMarkRef.current.offsetWidth);
-            const parentWidth = scaleMarkRef.current.parentElement.offsetWidth; // 获取父元素的宽度
-            scaleMarkPercentage = (scaleMarkWidth / parentWidth) * 100; // 计算比例
-        }
-    }, [scaleMarkRef]);
 
     const handleSliderChange = (event) => {
+        console.log("INSIDE YEAR SLIDER, year change BY USER: " + event.target.value);
         const value = Number(event.target.value);
         const index = nodes.indexOf(value);
         setCurrentIndex(index !== -1 ? index : currentIndex);
@@ -104,7 +112,7 @@ export default function YearSlider(props) {
                         return (
                             <div key={node} className={styles.scaleMark}
                                 ref={index === 0 ? scaleMarkRef : null}
-                                style={{ marginLeft: `${(index === 0 ? 0 : position-20)}%` }}>
+                                style={{ marginLeft: `${(index === 0 ? 0 : position - 20)}%` }}>
                                 <div className={styles.scaleLine} />
                                 {showLabel && <span style={{ fontSize: '8px' }}>{node}</span>} {/* 显示节点值 */}
                             </div>
@@ -143,7 +151,7 @@ YearSlider.defaultProps = {
     handleYearChange: (event) => {
         console.log("year change: " + event.target.value);
     },
-    
+
     slideStep: 5
-    
+
 };

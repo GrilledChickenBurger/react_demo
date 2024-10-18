@@ -38,12 +38,12 @@ function IndexMap() {
             container: mapviewRef.current, // 获取 HTMLDivElement
             center: [120.3, 30.7], // 经度，纬度
             zoom: 10, // 缩放级别
-            // constraints: {
-            //     minZoom: 10,
-            //     maxZoom: 18,
-            //     minScale: 10000000,
-            //     maxScale: 0
-            // },
+            constraints: {
+                minZoom: 10,
+                maxZoom: 18,
+                minScale: 10000000,
+                maxScale: 0
+            },
         });
 
         // 小组件：搜索框

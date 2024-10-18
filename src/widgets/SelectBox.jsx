@@ -5,6 +5,7 @@ import styles from './SelectBox.module.css';
 export default function SelectBox(props) {
 
     const optionitems = props.items;
+    const usePlaceholder = props.usePlaceholder;
 
     const options = optionitems.map((item, index) => {  
         return <option className={styles.selectBoxLabel} key={index} value={item.value}>{item.label}</option>
@@ -13,7 +14,9 @@ export default function SelectBox(props) {
     return (
         <select id="options" className={styles.selectBox} 
             onChange={props.handleSelectChange}>
-            <option value="" aria-disabled="true" style={{display: 'none', textAlign: 'center'}}>-- 请选择一个选项 --</option>
+            {usePlaceholder &&
+                <option value="" aria-disabled="true" style={{ display: 'none', textAlign: 'center' }}>-- 请选择一个选项 --</option>
+            }
             {options}
         </select>
     );
@@ -25,6 +28,7 @@ SelectBox.propTypes = {
         label: propType.string
     }),),
     handleSelectChange: propType.func,
+    usePlaceholder: propType.bool,
 }
 
 SelectBox.defaultProps = {
@@ -34,6 +38,7 @@ SelectBox.defaultProps = {
     },],
     handleSelectChange: () => {
         console.log('SelectBox: handleSelectChange not defined');
-    }
+    },
+    usePlaceholder: true,
 }
 

@@ -61,11 +61,25 @@ export const service_group = new GroupLayer({
     visible: false,
     visibilityMode: "exclusive",
 });
-service_group.layers.forEach(element=>{
-    element.visible = false;
-    element.renderer = renderer;
-})
+export const service_group1 = new GroupLayer({
+    title: "service1",
+    layers: [provision1, regulating1, culture1],
+    visible: false,
+    visibilityMode: "exclusive",
+});
+export const service_group2 = new GroupLayer({
+    title: "service2",
+    layers: [provision2, regulating2, culture2],
+    visible: false,
+    visibilityMode: "exclusive",
+});
 
+for (const group of [service_group, service_group1, service_group2]) {
+    group.layers.forEach(element=>{
+        element.visible = false;
+        element.renderer = renderer;
+    })
+}
 
 const farmer_regulating_res = new ImageryTileLayer({
     title: "结果：农民对调节服务的态度",

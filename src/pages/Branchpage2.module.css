@@ -1,12 +1,46 @@
+.introContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 
-.allContainer {
+  /* height: 80vh; */
+  /* width: 100vw; */
+  margin: 0;
+  padding: 1% 3%;
+
+  box-sizing: border-box;
+  /* 让宽度包含padding和border */
+}
+
+.introTitle {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.introContent{
+  margin-right:auto; /* 左对齐 */
+}
+.introContent li{
+  margin-left:10px;
+}
+.introlist{
+  border-left: 2px solid #000;
+}
+.introlist p{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.coreContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 
-  height: 80vh;
-  width: 100vw;
+  /* height: 80vh; */
+  width: 100%;
+  aspect-ratio: 16/9;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -25,7 +59,11 @@
   box-sizing: border-box;
   /* 让宽度包含padding和border */
 }
-
+.divider{
+  width:2px;
+  height:90%;
+  background-color: #ccc;
+}
 .sideSpanContainer {
   display: flex;
   flex-direction: column;
@@ -35,6 +73,7 @@
   height: 100%;
   width: 35%;
   padding: 2%;
+  margin-right: 2%;
   box-sizing: border-box;
   /* 让宽度包含padding和border */
 }
@@ -42,7 +81,7 @@
 .sideSpanContent {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   height: 100%;
   width: 100%;
 }
@@ -54,7 +93,8 @@
 
   font-size: 2rem;
   font-weight: bold;
-  margin: 0;
+  margin-bottom: 20px;
+
 }
 
 .sideSpan {

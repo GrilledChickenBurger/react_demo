@@ -1,7 +1,7 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 
-
+// 设置 popupTemplate
 const showOnly = {
     title: "仅显示该村数据",
     id: "show-this-village",
@@ -14,7 +14,7 @@ const showALL = {
 };
 const lu_popup_template = {
     // autocasts as new PopupTemplate()
-    title: "湖州{SJNF}各行政村信息",
+    title: "湖州市南浔区{SJNF}土地利用信息",
     content: [{
         type: "fields",
         fieldInfos: [{
@@ -30,14 +30,18 @@ const lu_popup_template = {
     }],
 };
 
+const village_popup_template = {
+    // autocasts as new PopupTemplate()
+    title: "湖州市各行政村位置",
+    content: [{
+        type: "text",
+        text: "<b>所在位置：湖州市，{XZQMC}</b>" +
+            "<li>行政村代码：{XZQDM}</li>",
+    },],
+};
 
-export const edges = new FeatureLayer({
-    url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/huzhou_edges_alpha0/FeatureServer",
-    title: "南浔区边界",
-    id: "edges",
-    outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
-    legendEnabled : false,
-});
+
+// 具体图层
 
 const lu_1975 = new FeatureLayer({
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/nanxun1975_lu/FeatureServer",
@@ -73,10 +77,24 @@ const lu_2019 = new FeatureLayer({
 export const lu_group = new GroupLayer({
     title: "landuse",
     layers: [lu_1975, lu_2000, lu_2005, lu_2015, lu_2019],
-    visible: true,
+    visible: false,
+    visibilityMode: "exclusive",
 });
 lu_group.layers.forEach(element => {
     element.visible = false;
     element.opacity = 0.7;
     element.popupTemplate = lu_popup_template;
+});
+
+
+// 最顶端：南浔区行政村边界图层
+
+export const edges = new FeatureLayer({
+    url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/nanxun_Vedges_alpha0/FeatureServer",
+    title: "南浔区边界",
+    id: "edges",
+    visible: false,
+    outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
+    legendEnabled: false,
+    popupEnabled: village_popup_template,
 });

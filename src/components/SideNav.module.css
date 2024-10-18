@@ -1,0 +1,69 @@
+.navbarContent {
+    width:12vw;
+    min-width: 200px; 
+    min-height: 50%; /* 充满整个高度 */
+    background-color: #f0f0f0; 
+    padding: 20px; 
+    /* position: fixed; 固定位置 */
+    overflow-y: auto; /* 纵向滚动 */
+}
+
+
+.navbar {
+    display: flex;
+    flex-direction: column; /* 纵向排列 */
+}
+.navbarItem{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.navbarItem a {
+    margin: 10px 0;
+    text-decoration: none;
+    color: #333;
+}
+.navbarIcon {
+    margin-right: 10px;
+}
+
+
+.dropdownContainer {
+    position: relative; /* 为下拉菜单提供定位上下文 */
+}
+  
+.dropdown {
+    background-color: #f0f0f0; /* 子菜单背景颜色 */
+    border: none;
+    margin-left: 20px;
+}
+.dropdown a{
+    margin: 10px 0;
+    text-decoration: none;
+    color: #333;
+}
+/* 发现使用NavLink同时设置className默认样式和activeClassName选中样式，选中样式不生效问题 */
+
+.dropdownItem {
+    display: block;
+    margin-left:20px;
+    text-decoration: none;
+    transition: all 0.3s ease; /* 过渡效果 */
+}
+.dropdownItemActive {
+    display: block;
+    padding: 5px 10px;
+    margin-left:30px;
+    text-decoration: none;
+    color:white !important;
+    border-radius: 5px;
+    background-color: #333;
+    transition: all 0.3s ease; /* 过渡效果 */
+}
+
+.dropdownItem:hover {
+    background-color: #e0e0e0; /* 悬停效果 */
+}
+.dropdownItemActive:hover {
+    background-color: #777; /* 悬停效果 */
+}
