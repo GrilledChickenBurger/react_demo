@@ -46,7 +46,7 @@ const village_popup_template = {
 const lu_1975 = new FeatureLayer({
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/nanxun1975_lu/FeatureServer",
     title: "南浔区1975年土地利用情况",
-    id: "1975",
+    id: '1975',
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 const lu_2000 = new FeatureLayer({

@@ -194,13 +194,13 @@ export default function Branch2Map(props) {
             record_tif_layer = initial_layer;
             update_cur_tif_layer(cur_year);
             edges.visible = true;
+            update_cur_layerview();
         }
         else {
             record_tif_layergroup.visible = false;
             edges.visible = false;
         }
 
-        update_cur_layerview();
 
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (reactRootRef.current) {
@@ -421,9 +421,8 @@ export default function Branch2Map(props) {
             record_layerview = layerview;
             console.log("更新layerview");
 
-            if (record_layergroup.title == "landuse") {
-                filter_layerview(cur_option);
-            }
+            filter_layerview(cur_option);
+
         });
     }
 

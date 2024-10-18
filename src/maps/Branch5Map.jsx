@@ -187,7 +187,9 @@ export default function Branch5Map(props) {
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (realRootRef.current) {
             realRootRef.current.render(<>
-                <li style={{ fontSize: "medium" }}>{record_real_layer.title}</li>
+                <li style={{ fontSize: "medium" }}>{
+                    record_real_layer.id==='redline' ? "生态保护红线和永久基本农田" :
+                    record_real_layer.title}</li>
                 {/* <li style={{ fontSize: "medium" }}>{YNPK.title}</li> */}
             </>);
         }

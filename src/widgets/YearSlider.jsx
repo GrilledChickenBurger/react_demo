@@ -3,12 +3,16 @@ import propTypes from 'prop-types';
 import styles from './YearSlider.module.css';
 
 export default function YearSlider(props) {
-    const { startYear, endYear, handleYearChange, yearNodes, slideStep, initYear } = props.settings;
+    const { startYear, endYear, handleYearChange, yearNodes, slideStep, initYear, yearLabels} = props.settings;
     // 定义节点
     const defaultNodes = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
     const nodes = yearNodes && yearNodes.length > 0 && yearNodes[0] === startYear && yearNodes[yearNodes.length - 1] === endYear
         ? yearNodes
         : defaultNodes;
+    
+    const labels = yearLabels && yearLabels.length === nodes.length 
+        ? yearLabels
+         : nodes;
 
     const [currentValue, setCurrentValue] = useState(startYear); // 当前节点值
     const [currentIndex, setCurrentIndex] = useState(0); // 当前节点索引
@@ -114,7 +118,7 @@ export default function YearSlider(props) {
                                 ref={index === 0 ? scaleMarkRef : null}
                                 style={{ marginLeft: `${(index === 0 ? 0 : position - 20)}%` }}>
                                 <div className={styles.scaleLine} />
-                                {showLabel && <span style={{ fontSize: '8px' }}>{node}</span>} {/* 显示节点值 */}
+                                {showLabel && <span style={{ fontSize: '8px' }}>{labels[index]}</span>} {/* 显示节点值 */}
                             </div>
                         );
                     })}

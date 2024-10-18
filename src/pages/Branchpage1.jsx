@@ -30,14 +30,14 @@ const selectinfo_group = [
     },
     {
         title: "1. 经济维度", items: [
-            { value: "csj27_GPI", label: "长三角 真实发展指数" },
+            { value: "csj27_GPI", label: "长三角 人均真实发展指数" },
             { value: "csj27_GDP", label: "长三角 人均GDP" },
         ]
     },
     {
         title: "2. 生态维度", items: [
-            { value: "csj27_EF", label: "长三角 环境足迹" },
-            { value: "csj27_ECC", label: "长三角 生物承载力" },
+            { value: "csj27_EF", label: "长三角 人均环境足迹" },
+            { value: "csj27_ECC", label: "长三角 人均生物承载力" },
         ]
     },
     {
@@ -209,10 +209,10 @@ function SideSpan({ year, yearProps, option, setOption }) {
 
     const option_label =
         option === "csj0" ? "长三角省市位置" :
-            option === "csj27_GPI" ? "长三角 真实发展指数" :
+            option === "csj27_GPI" ? "长三角 人均真实发展指数" :
             option === "csj27_GDP" ? "长三角 人均GDP" :
-            option === "csj27_EF" ? "长三角 环境足迹" :
-            option === "csj27_ECC" ? "长三角 生物承载力" :
+            option === "csj27_EF" ? "长三角 人均环境足迹" :
+            option === "csj27_ECC" ? "长三角 人均生物承载力" :
 
         option === "total" ? "湖州市总体评估结果" :
             option === "landuse_all" ? "湖州市 总体土地利用" :
@@ -220,7 +220,8 @@ function SideSpan({ year, yearProps, option, setOption }) {
             option === "landuse_03" ? "湖州市 林地分布" :
             option === "landuse_11" ? "湖州市 水体分布" :
                             
-            option === "population" ? "湖州市 人口密度" :
+            option === "population" ? "湖州市 人口数量" :
+            option === "population_density" ? "湖州市 人口密度" :
             option === "population_growth" ? "湖州市 人口增长率" :
 
             option === "tourist" ? "湖州市 游客数量" :

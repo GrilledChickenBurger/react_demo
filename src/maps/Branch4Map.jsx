@@ -202,6 +202,7 @@ export default function Branch4Map(props) {
         }
     }, [view2015]);
 
+
     // 监听浏览器窗口大小变化，自动调整图例展开状态
     useEffect(() => {
         if (!view2015 || !mapview2015Ref.current) return;
@@ -214,12 +215,12 @@ export default function Branch4Map(props) {
         const checkLegendExpanded = (init = false) => {
             let isinit = init === true ? true : false;
             const width = mapview2015Ref.current.clientWidth;
-            if (width < 550) {
+            if (width < 600) {
                 for (const l of legend) {
                     l.expanded = false;
                 }
             }
-            else if (width >= 550 && isinit) {
+            else if (width >= 600 && isinit) {
                 for (const l of legend) {
                     l.expanded = true;
                 }

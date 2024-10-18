@@ -153,8 +153,8 @@ export function BranchPiece2() {
 
     const mapProps = {
         basemap: 'osm',
-        center: [120.171, 30.745],
-        zoom: 12,
+        center: [119.83, 30.71],
+        zoom: 10,
     };
     const viewProps = {
         cur_year: year,
@@ -166,12 +166,13 @@ export function BranchPiece2() {
     };
 
     const yearSliderProps = {
-        startYear: 1950,
+        startYear: 1910,
         endYear: 2025,
         handleYearChange: handleYearChange,
-        yearNodes: [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2025],
+        yearNodes: [1910, 1960, 1975, 1990, 2005, 2015, 2025],
         slideStep: 5,
-        initYear: 1950
+        initYear: 1910,
+        // yearLabels: [1910, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2025]
     };
 
     return (
@@ -266,11 +267,11 @@ function Intro() {
             <h2 className={styles.introTitle}>二、历史现状评估——景观格局评估</h2>
             <div className={styles.introContent}>
                 <p>景观格局是衡量景观绿化、生态平衡、人文景观、经济景观等综合性能的重要指标。</p>
-                <p>湖州市南浔区是桑基鱼塘的保护区所在地之一，对其进行景观格局评估，可以。。。</p>
+                <p>湖州市南浔区是桑基鱼塘的保护区所在地之一，对其进行景观格局评估，可以帮助评估该地区的生态环境质量、水域资源利用情况以及人类活动对当地生态系统的影响，从而为保护区的可持续发展和生态环境保护提供科学依据和决策支持。</p>
                 <p>遥感影像及土地利用数据为我们提供了一种新型的综合评估手段。通过对遥感影像及土地利用数据的分析，我们可以了解到南浔区桑基鱼塘的分布情况、生态景观等综合信息。</p>
                 <div className={styles.introlist}>
                     <p>1. 展示2500年前至今，南浔区的桑基鱼塘整体形态演变。
-                        <b>古代地图来源：文献资料；现代地图来源：遥感影像数据、土地利用数据。</b></p>
+                        <b>古代地图来源：地方志书；现代地图来源：遥感影像数据、土地利用数据。</b></p>
                     <p>2. 展示现代南浔区桑基鱼塘的具体分布情况及生态景观。<b>土地利用数据：</b>桑园面积、鱼塘面积、水田面积</p>
                     <p>3. 展示现代南浔区桑基鱼塘<b>在多个尺度下</b>的景观格局指数。<b>尺度：</b>湖州尺度、南浔区尺度、局部尺度</p>
                 </div>
