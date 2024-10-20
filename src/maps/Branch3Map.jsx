@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client';
 
 
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
-import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
-import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 
 import BaseMapview from './BaseMapview.jsx';
@@ -22,7 +20,7 @@ let initial_layergroup = new GroupLayer({
 let record_tif1_layergroup = initial_layergroup;
 let record_tif2_layergroup = initial_layergroup;
 let record_layergroup = initial_layergroup;
-
+let is_layergroup_change = false;
 // 全局变量，当前图层组显示的具体图层
 let initial_layer = {
     id: "1800",
@@ -32,7 +30,7 @@ let record_tif1_layer = initial_layer;
 let record_tif2_layer = initial_layer;
 let record_layer = initial_layer;
 let record_result_layer = initial_layer;
-let record_layerview;
+
 
 
 export default function Branch3Map(props) {
@@ -52,7 +50,8 @@ export default function Branch3Map(props) {
     const baseRootRef = useRef(null);
     const service1_RootRef = useRef(null);
     const service2_RootRef = useRef(null);
-
+    
+    // INITIALIZE 初始化mapview
     useEffect(() => {
         setTifView1(BaseMapview(mapTifview1Ref.current, [service_group1], mapProps));
         setTifView2(BaseMapview(mapTifview2Ref.current, [service_group2], mapProps));
@@ -68,6 +67,7 @@ export default function Branch3Map(props) {
         };
     }, []);
 
+    // INITIALIZE 多视角同步
     useEffect(() => {
         if (!view || !tifview1 || !tifview2) return;
         for (const v of [tifview1, tifview2]) {
@@ -77,7 +77,6 @@ export default function Branch3Map(props) {
 
         const views = [view, tifview1, tifview2];
         let handle;
-        // 两个view视角同步
         let active;
         const sync = (source) => {
             if (!active || !active.viewpoint || active !== source) {
@@ -111,6 +110,7 @@ export default function Branch3Map(props) {
         // 监听视图变化
     }, [view]);
 
+    // INITIALIZE 初始化右上角标题组件 (3个)
     useEffect(() => {
         if (!view) return;
 
@@ -184,20 +184,21 @@ export default function Branch3Map(props) {
         };
     }, [view]);
 
+    // CORE FUNCTIONS
+    // 在service_option、base_option变化时，更新当前图层组和当前图层
     useEffect(() => {
         if (!view || !service_option || !base_option) return;
         console.log("base option changed: " + base_option + " service_option changed: ", service_option);
 
+        console.log("###################################");
+        is_layergroup_change = false;
         update_cur_tif_layergroup();
         update_cur_layergroup(base_option);
 
-        // 由于更换图层组后，新图层的id可能和旧图层的id相同，导致无法更新图层，因此需要先初始化图层
-        // 关于初始化后丢失原始图层信息，无法将原图层设为visible false，需要通过图层组设置 visibilityMode为excusive
-        // 因此在不同图层组中不存在相同ID图层时，建议不要这样做
-        record_layer = initial_layer;
         update_cur_tif_layer(service_option);
-        update_cur_layer(service_option);
+        update_cur_layer(service_option, is_layergroup_change);
         update_result_layer();
+        console.log("###################################");
 
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (baseRootRef.current) {
@@ -218,6 +219,7 @@ export default function Branch3Map(props) {
 
     }, [view, service_option, base_option]);
 
+    // 修改当前结果图层的可见性和透明度
     useEffect(() => {
         if (!view) return;
         record_result_layer.opacity = result_opacity;
@@ -251,7 +253,8 @@ export default function Branch3Map(props) {
             console.log("图层组一致，无需更新图层组。");
             return;
         }
-        console.log("准备更新图层组，当前图层组：" + record_layergroup.title + "，目标：" + name);
+        console.log("准备更新图层组，当前图层组：" + record_layergroup.title +
+            " 目标图层组：" + name);
         let new_layergroup; let isfind = false;
         for (const element of view.map.layers) {
             if (element.title == name) {
@@ -261,15 +264,18 @@ export default function Branch3Map(props) {
             }
         }
         if (!isfind) {
-            console.log("未找到。");
+            console.log("未找到。is layergroup change: " + is_layergroup_change);
             return;
         }
 
         record_layergroup.visible = false;
         new_layergroup.visible = true;
         record_layergroup = new_layergroup;
-        console.log("成功更新图层组，当前图层组：" + record_layergroup.title);
-        console.log("==============================");
+        is_layergroup_change = true;
+        console.log("成功更新图层组，当前图层组：" + record_layergroup.title + 
+            "is layergroup change: " + is_layergroup_change);
+        
+        console.log("------------------------------");
 
     }
 
@@ -285,7 +291,7 @@ export default function Branch3Map(props) {
         record_tif1_layergroup = service_group1;
         record_tif2_layergroup = service_group2;
         console.log("成功更新TIF图层组，当前图层组：" + record_tif1_layergroup.title + " " + record_tif2_layergroup.title);
-        console.log("==============================");
+        console.log("------------------------------");
 
     }
 
@@ -318,15 +324,17 @@ export default function Branch3Map(props) {
         else {
             console.log("--不存在可更换图层，保持原状。");
         }
-        console.log("==============================");
+        console.log("------------------------------");
     }
 
-    function update_cur_layer(id) {
-        if (record_layer && record_layer.id == id) {
+    function update_cur_layer(id, forceupdate = false) {
+        if (!forceupdate && record_layer && record_layer.id == id) {
             console.log("--图层一致，无需更新图层。");
             return;
         }
-        console.log("准备更新特征图层。当前特征图层id：" + record_layer.id);
+        console.log("准备更新特征图层。当前特征图层id：" + record_layer.id
+            + " 目标特征图层id：" + id );
+        
         let new_layer;
         if (record_layergroup.findLayerById(id)) {
             new_layer = record_layergroup.findLayerById(id);
@@ -338,7 +346,7 @@ export default function Branch3Map(props) {
         else {
             console.log("--不存在可更换图层，保持原状。");
         }
-        console.log("==============================");
+        console.log("------------------------------");
     }
 
     function update_result_layer() {
@@ -360,7 +368,7 @@ export default function Branch3Map(props) {
         else {
             console.log("--不存在可更换图层，保持原状。");
         }
-        console.log("==============================");
+        console.log("------------------------------");
     }
 
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState, lazy, Suspense } from 'react';
+import React, { useContext, useState, lazy, Suspense, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import Header from '../components/Header.jsx'
@@ -138,10 +138,15 @@ export default function BranchPage2() {
 
 export function BranchPiece2() {
     const [year, setYear] = useState(1960);
+    const [dynasty, setDynasty] = useState(0);
     const handleYearChange = (value) => {
         // console.log("year value: ", event.target.value);
         setYear(value);
     }
+    const handleDynastyChange = (value) => {
+        setDynasty(value);
+    }
+
     const [option, setOption] = useState('');
 
     const [tif_opacity, setTifOpacity] = useState(1);
@@ -158,6 +163,7 @@ export function BranchPiece2() {
     };
     const viewProps = {
         cur_year: year,
+        cur_dynasty: dynasty,
         cur_option: option,
         tif_opacity: tif_opacity,
         tif_visible: tif_visible,
@@ -174,6 +180,19 @@ export function BranchPiece2() {
         initYear: 1910,
         // yearLabels: [1910, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2025]
     };
+
+    const dynastySliderProps = {
+        startYear: 0,
+        endYear: 40,
+        handleYearChange: handleDynastyChange,
+        yearNodes: [0, 5, 10, 15, 20, 25, 30, 35, 40],
+        slideStep: 5,
+        initYear: 0,
+        yearLabels: ["春秋战国", "秦汉", "三国两晋" ,"隋唐", "宋", "元", "明", "清", "近现代"]
+    };
+
+    const time = { year, dynasty };
+    const SliderProps = { yearSliderProps, dynastySliderProps };
 
     return (
         <>
@@ -194,7 +213,9 @@ export function BranchPiece2() {
                 <div className={styles.divider}></div>
 
                 <div className={styles.sideSpanContainer}>
-                    <SideSpan year={year} yearSliderProps={yearSliderProps} option={option} setOption={setOption}
+                    <SideSpan
+                        time={time} SliderProps={SliderProps}
+                        option={option} setOption={setOption}
                         tif_opacity={tif_opacity} setTifOpacity={setTifOpacity} tif_visible={tif_visible} setTifVisible={setTifVisible}
                         shp_opacity={shp_opacity} setShpOpacity={setShpOpacity} shp_visible={shp_visible} setShpVisible={setShpVisible} />
                 </div>
@@ -203,10 +224,12 @@ export function BranchPiece2() {
     );
 }
 
-function SideSpan({ year, yearSliderProps, option, setOption,
+function SideSpan({ time, SliderProps, option, setOption,
     tif_opacity, setTifOpacity, tif_visible, setTifVisible,
     shp_opacity, setShpOpacity, shp_visible, setShpVisible
 }) {
+    const {year, dynasty} = time;
+    const { yearSliderProps, dynastySliderProps } = SliderProps;
 
     const guide = <b><li>调整年份，展示不同年份的数据；</li>
         <li>选择不同选项，展示不同类型的数据;</li>
@@ -216,8 +239,26 @@ function SideSpan({ year, yearSliderProps, option, setOption,
         option === "huzhou_position" ? "湖州市 乡村聚落分布" :
             option === "ALL" ? "南浔区 总体土地利用" :
                 option === "landuse_1-2-3" ? "南浔区 桑基鱼塘分布" :
-                    option === "ancient" ? "局部 桑基鱼塘具体形态" : "";
+                    option === "local_ancient" ? "局部 桑基鱼塘具体形态" : "";
 
+    const dynasty_label_list = dynastySliderProps.yearNodes.reduce((acc, year, index) => {
+        acc[year] = dynastySliderProps.yearLabels[index];
+        return acc;
+    },{});
+    const dynasty_label = dynasty_label_list[dynasty];
+    
+    const [time_label, setTimeLabel] = useState(null);
+    const [slider, setSlider] = useState(null);
+    useEffect(() => {
+        if (option === 'local_ancient') {
+            setTimeLabel(dynasty_label);
+            setSlider(<YearSlider settings={dynastySliderProps} />);
+        }
+        else {
+            setTimeLabel(year);
+            setSlider(<YearSlider settings={yearSliderProps} />);
+        }
+    }, [option, year, dynasty]);
 
     return (
         <div className={styles.sideSpanContent}>
@@ -225,8 +266,11 @@ function SideSpan({ year, yearSliderProps, option, setOption,
             <p style={{ marginTop: "0" }}>{guide}</p>
             <hr style={{ width: "100%", height: "1px", backgroundColor: "gray" }} />
 
-            <div className={styles.sideSpan}>当前年份: {year}
-                <YearSlider settings={yearSliderProps} />
+            <div className={styles.sideSpan}>当前年份:
+                {/* {year}
+                <YearSlider settings={yearSliderProps} /> */}
+                {time_label}
+                {slider}
             </div>
             <hr style={{ width: "100%", height: "1px", backgroundColor: "gray" }} />
 

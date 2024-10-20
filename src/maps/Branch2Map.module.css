@@ -25,12 +25,10 @@
   }
 
 .idxContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 1);
 
-    padding: 2%;
-    margin-top: 10px;
+  padding: 5% 2%;
 }

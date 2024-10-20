@@ -22,6 +22,7 @@ let record_layergroup = new GroupLayer({
     title: "none",
     layers: [],
 });
+let is_layergroup_change = false;
 // 全局变量，当前时间滑块表示的年份
 let initial_year = "1800";
 // 全局变量，当前图层组显示的具体图层
@@ -45,6 +46,7 @@ export default function Branch1Map(props) {
     const [selectedCountyAttribute, setSelectedCountyAttribute] = useState(null);
     const [selectedCountyGeometry, setSelectedCountyGeometry] = useState(null);
 
+    // INITIALIZE 初始化mapview
     useEffect(() => {
         setView(BaseMapview(mapviewRef.current,
             [pop_group,
@@ -66,6 +68,7 @@ export default function Branch1Map(props) {
         };
     }, []);
 
+    // INITIALIZE 初始化右上角标题组件
     useEffect(() => {
         if (!view) return;
         if (!selectintroRef.current) {
@@ -118,43 +121,6 @@ export default function Branch1Map(props) {
         };
     }, [view]);
 
-
-    useEffect(() => {
-        if (!view || !cur_option || !cur_year) return;
-        console.log("INSIDE MAP: option changed: " + cur_option + " year changed: " + cur_year);
-
-        update_cur_layergroup(cur_option);
-        // 根据当前尺度，展示相应的边界
-        if (cur_option.includes('csj27')) {
-            csj_edges.visible = true;
-            huzhou_edges.visible = false;
-        }
-        else {
-            csj_edges.visible = false;
-            huzhou_edges.visible = true;
-        }
-
-        // 由于更换图层组后，新图层的id可能和旧图层的id相同，导致无法更新图层，因此需要先初始化图层
-        record_layer = initial_layer;
-        update_cur_layer(cur_year);
-
-        if (cur_option.includes('landuse')) {   // landuse: 需要筛选LU类别
-            update_cur_layerview();
-        }
-        else if (cur_option.includes('csj27')) {    // csj27: 需要更改renderer展示不同字段的数据
-            update_csj_renderer();
-        }
-        const legend = view.ui.find("default-legend-expand");
-        legend.expanded = true;
-
-        if (reactRootRef.current) {
-            reactRootRef.current.render(<>
-                <li style={{ fontSize: "medium" }}>{record_layer.title}</li>
-            </>);
-        }
-
-    }, [view, cur_option, cur_year]);
-
     // 监听浏览器窗口大小变化，自动调整图例展开状态
     useEffect(() => {
         if (!view || !mapviewRef.current || !cur_option) return;
@@ -182,6 +148,46 @@ export default function Branch1Map(props) {
         };
     }, [view]);
 
+    // CORE FUNCTIONS
+    // 在option、year变化时，更新当前图层组和当前图层
+    useEffect(() => {
+        if (!view || !cur_option || !cur_year) return;
+        console.log("INSIDE MAP: option changed: " + cur_option +
+            " year changed: " + cur_year);
+        console.log("###################################");
+        is_layergroup_change = false;
+        update_cur_layergroup(cur_option);
+        // 根据当前尺度，展示相应的边界
+        if (cur_option.includes('csj27')) {
+            csj_edges.visible = true;
+            huzhou_edges.visible = false;
+        }
+        else {
+            csj_edges.visible = false;
+            huzhou_edges.visible = true;
+        }
+
+        // 由于更换图层组后，新图层的id可能和旧图层的id相同，导致无法更新图层，因此需要强制更新
+        update_cur_layer(cur_year, is_layergroup_change);
+
+        if (cur_option.includes('landuse')) {   // landuse: 需要筛选LU类别
+            update_cur_layerview();
+        }
+        else if (cur_option.includes('csj27')) {    // csj27: 需要更改renderer展示不同字段的数据
+            update_csj_renderer();
+        }
+        console.log("###################################");
+
+        if (reactRootRef.current) {
+            reactRootRef.current.render(<>
+                <li style={{ fontSize: "medium" }}>{record_layer.title}</li>
+            </>);
+        }
+
+    }, [view, cur_option, cur_year]);
+
+
+    // 在option变化时，根据对应图层组，修改view的中心点和缩放级别
     useEffect(() => {
         if (!view) return;
         if (cur_option.includes("csj")) {
@@ -198,7 +204,7 @@ export default function Branch1Map(props) {
         }
     }, [view, cur_option]);
 
-
+    // 对tif类型的population，添加单击查询像素值的查询函数
     useEffect(() => {
         if (!view) return;
         const getClickInfo = async (event) => {
@@ -225,6 +231,7 @@ export default function Branch1Map(props) {
         };
     }, [view]);
 
+    // 对tif类型的population，添加popup模板
     useEffect(() => {
         if (!view) return;
         // console.log(popup_info);
@@ -252,6 +259,7 @@ export default function Branch1Map(props) {
 
     }, [view, popup_info]);
 
+    // 对show-this-county、show-this-village，添加点击获取顶端edge图层geometry的事件
     useEffect(() => {
         if (!view) return;
 
@@ -278,6 +286,7 @@ export default function Branch1Map(props) {
         };
     }, [view]);
 
+    // popup action 事件
     useEffect(() => {
         if (!view || !selectedCountyGeometry) return;
 
@@ -339,14 +348,17 @@ export default function Branch1Map(props) {
         record_layergroup.visible = false;
         new_layergroup.visible = true;
         record_layergroup = new_layergroup;
-        console.log("成功更新图层组，当前图层组：" + record_layergroup.title);
-        console.log("==============================");
+        is_layergroup_change = true;
+        console.log("成功更新图层组，当前图层组：" + record_layergroup.title +
+            "is layergroup change: " + is_layergroup_change);
+        
+        console.log("----------------------------");
 
     }
 
-    function update_cur_layer(id) {
+    function update_cur_layer(id, forceupdate = false) {
         id = typeof id === 'number' ? id.toString() : id;
-        if (record_layer && record_layer.id == id) {
+        if (!forceupdate && record_layer && record_layer.id == id) {
             console.log("--图层一致，无需更新图层。");
             return;
         }
@@ -360,7 +372,7 @@ export default function Branch1Map(props) {
             record_layer.visible = false;
             record_layer = new_layer;
             console.log("--成功更新图层，当前图层id：" + id);
-            console.log("==============================");
+            console.log("----------------------------");
             return;
         }
         // 当前图层组最早的年份
@@ -394,14 +406,14 @@ export default function Branch1Map(props) {
         // else {
         //     console.log("--不存在可更换图层，保持原状。");
         // }
-        console.log("==============================");
+        console.log("----------------------------");
 
     }
 
     function update_csj_renderer() {
         const tmp_field = cur_option.split("_")[1];
         const tmp_param = CSJ_params[tmp_field];
-        console.log("准备更新renderer。当前字段：" + tmp_field + " 参数：" + tmp_param);
+        console.log("准备更新renderer。当前字段：" + tmp_field);
         CSJ_group.layers.forEach(element => {
             let tmp_layer_param = { ...tmp_param, layer: element };
             colorRendererCreator.createClassBreaksRenderer(tmp_layer_param)

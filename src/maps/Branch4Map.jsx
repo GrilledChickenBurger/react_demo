@@ -22,7 +22,7 @@ let initial_layer = {
 };
 let record_2015ES_layer = initial_layer;
 let record_2019ES_layer = initial_layer;
-let record_result_layer = initial_layer;
+
 let record_2015_layerview;
 let record_layerview;
 
@@ -67,6 +67,7 @@ export default function Branch4Map(props) {
     const select2019ESRef = useRef(null);
     const RootSelect2019ESRef = useRef(null);
 
+    // INITIALIZE 初始化mapview
     useEffect(() => {
         setView2015(BaseMapview(mapview2015Ref.current, [lu_2015], mapProps));
         setViewES2015(BaseMapview(mapviewES2015Ref.current, [ES2015], mapProps));
@@ -83,6 +84,7 @@ export default function Branch4Map(props) {
         };
     }, []);
 
+    // INITIALIZE 多视角同步
     useEffect(() => {
         if (!view2019 || !view2015 || !viewES2019 || !viewES2015) return;
         let handle;
@@ -125,6 +127,7 @@ export default function Branch4Map(props) {
         // 监听视图变化
     }, [view2015]);
 
+    // INITIALIZE 初始化右上角标题组件 (4个) + 拉框组件 (2个)
     useEffect(() => {
         if (!view2015 || !viewES2015 || !view2019 || !viewES2019) return;
 
@@ -236,16 +239,19 @@ export default function Branch4Map(props) {
         };
     }, [view2015]);
 
-
+    // CORE FUNCTIONS
+    // 在option15、option19变化时，更新两个图层组的当前图层
     useEffect(() => {
         if (!view2015 || !option15 || !option19) return;
         console.log("2015 service_option changed: ", option15);
         console.log("2019 service_option changed: ", option19);
 
+        console.log("###################################");
         update_2015ES_layer(option15);
         update_2019ES_layer(option19);
         // update_cur_layerview();
-
+        console.log("###################################");
+        
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (Root2019ESRef.current) {
             Root2019ESRef.current.render(<>
@@ -260,6 +266,7 @@ export default function Branch4Map(props) {
 
     }, [view2015, option15, option19]);
 
+    // 在res_visible = true时，筛选LU = 1 2 3
     useEffect(() => {
         if (!view2015 || !view2019) return;
         update_cur_layerview(res_visible);
@@ -291,7 +298,8 @@ export default function Branch4Map(props) {
             console.log("--图层一致，无需更新图层。");
             return;
         }
-        console.log("准备更新2015 ES图层。当前2015 ES图层id：" + record_2015ES_layer.id + " 目标id：" + option);
+        console.log("准备更新2015 ES图层。当前2015 ES图层id：" + record_2015ES_layer.id +
+            " 目标id：" + option);
         let new_layer = ES2015.findLayerById(option);
         if (new_layer) {
             new_layer.visible = true;
@@ -302,13 +310,15 @@ export default function Branch4Map(props) {
         else {
             console.log("--未找到一致图层。");
         }
+        console.log("------------------------------");
     }
     function update_2019ES_layer(option) {
         if (record_2019ES_layer && record_2019ES_layer.id == option) {
             console.log("--图层一致，无需更新图层。");
             return;
         }
-        console.log("准备更新2019 ES图层。当前2019 ES图层id：" + record_2019ES_layer.id + " 目标id：" + option);
+        console.log("准备更新2019 ES图层。当前2019 ES图层id：" + record_2019ES_layer.id
+            + " 目标id：" + option);
         let new_layer = ES2019.findLayerById(option);
         if (new_layer) {
             new_layer.visible = true;
@@ -319,6 +329,7 @@ export default function Branch4Map(props) {
         else {
             console.log("--未找到一致图层。");
         }
+        console.log("------------------------------");
     }
 
     function update_cur_layerview(isfilter) {

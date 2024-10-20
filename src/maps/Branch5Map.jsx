@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client';
 
 
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
-import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
-import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 
 import BaseMapview from './BaseMapview.jsx';
@@ -27,7 +25,6 @@ let initial_layer = {
 let other_layer = initial_layer;
 let record_real_layer = initial_layer;
 let record_sim_layer = initial_layer;
-let record_layer = initial_layer;
 
 
 const real_layersINFO4step = {
@@ -59,6 +56,7 @@ export default function Branch5Map(props) {
     const realRootRef = useRef(null);
     const simRootRef = useRef(null);
 
+    // INITIALIZE 初始化mapview
     useEffect(() => {
         setRealView(BaseMapview(mapviewRealRef.current, [constrain_group, real_2019group], mapProps));
         setSimView(BaseMapview(mapviewSimRef.current, [real_2015group, pred_2019group, pred_2035group], mapProps));
@@ -71,6 +69,7 @@ export default function Branch5Map(props) {
         };
     }, []);
 
+    // INITIALIZE 多视角同步
     useEffect(() => {
         if (!real_view || !sim_view) return;
         let handle;
@@ -109,6 +108,7 @@ export default function Branch5Map(props) {
         // 监听视图变化
     }, [real_view, sim_view]);
 
+    // INITIALIZE 初始化右上角标题组件 (2个)
     useEffect(() => {
         if (!real_view || !sim_view) return;
         if (!realTitleRef.current) {
@@ -169,6 +169,9 @@ export default function Branch5Map(props) {
         };
     }, [real_view, sim_view]);
 
+    // CORE FUNCTIONS
+    // 根据当前step，更新当前的 real 和 simulate 图层组
+    // 根据当前option，当step=3时，更新当前的 result 图层
     useEffect(() => {
         if (!real_view || !sim_view || !cur_option || !step) return;
         console.log(" service_option changed: " + cur_option + " step: " + step);
@@ -178,12 +181,15 @@ export default function Branch5Map(props) {
         real_layersID = real_layersINFO4step[step].layersID;
         sim_layersID = sim_layersINFO4step[step].layersID;
 
+        console.log("###################################");
         update_cur_layergroup();
         update_real_layer();
         update_sim_layer();
         if (step == 3) {
             update_res_layer(cur_option);
         }
+        console.log("###################################");
+
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (realRootRef.current) {
             realRootRef.current.render(<>
@@ -256,7 +262,7 @@ export default function Branch5Map(props) {
         record_sim_layergroup = sim_layergroup;
 
         console.log("更新图层组成功，当前图层组：" + record_real_layergroup.title + " " + record_sim_layergroup.title);
-        console.log("==============================");
+        console.log("------------------------------");
     }
 
     function update_real_layer() {
@@ -296,7 +302,7 @@ export default function Branch5Map(props) {
         else {
             console.log("未找到任何一致图层，更新左侧real图层失败。");
         }
-        console.log("=============================");
+        console.log("----------------------------");
     }
 
     function update_sim_layer() {
@@ -327,7 +333,7 @@ export default function Branch5Map(props) {
         else {
             console.log("未找到任何一致图层，更新右侧simulate图层失败。");
         }
-        console.log("=============================");
+        console.log("----------------------------");
     }
 
     function update_res_layer(option) {
@@ -348,108 +354,9 @@ export default function Branch5Map(props) {
         else {
             console.log("--不存在可更换图层，保持原状。");
         }
-        console.log("=======================");
+        console.log("----------------------");
 
     }
-
-
-
-    // function update_cur_layerview() {
-    //     sim_view.whenLayerView(record_real_layer).then((layerview) => {
-    //         record_2015_layerview = layerview;
-    //         console.log("更新2015layerview");
-
-    //         // if (cur_option.includes("landuse")) {
-    //         //     filter_layerview(cur_option);
-    //         // }
-    //     });
-
-    //     real_view.whenLayerView(record_layer).then((layerview) => {
-    //         record_layerview = layerview;
-    //         console.log("更新layerview");
-
-    //         if (cur_option.includes("landuse")) {
-    //             filter_layerview(cur_option);
-    //         }
-    //     });
-    // }
-
-    // function filter_layerview(option) {
-    //     const allTypes = ["1", "2", "3", "4", "5", "6"]; // 这里定义所有类型
-    //     const matchedTypes = option.match(/\d/g) || []; // 获取所有数字，默认为空数组
-    //     const uniqueFilteredTypes = [...new Set(matchedTypes)]; // 去重
-    //     const validFilteredTypes = uniqueFilteredTypes.filter(type => allTypes.includes(type));
-    //     console.log("筛选的类型：" + validFilteredTypes.join(', '));
-
-    //     let resultcontent = "";
-    //     const queries = [];
-    //     for (const layerview of [record_2015_layerview, record_layerview]) {
-    //         if (validFilteredTypes.length > 0) {
-    //             // 使用 IN 子句
-    //             layerview.filter = {
-    //                 where: validFilteredTypes.map(val => `研究地 = '${val}'`).join(' OR')
-    //             };
-    //         }
-    //         else {
-    //             layerview.filter = null; // 默认不筛选
-    //         }
-
-    //         const effectConfig = {
-    //             filter: layerview.filter ? new FeatureFilter({
-    //                 where: layerview.filter.where,
-    //             }) : null,
-    //             includedEffect: layerview.filter ? " drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" : null, // 放大1.2倍
-    //             // excludedEffect: "blur(2px) brightness(70%)" // 淡化其他不相关部分
-    //         };
-    //         layerview.featureEffect = new FeatureEffect(effectConfig);
-
-    //         queries.push(layerview.queryFeatures().then(response => {
-    //             let areaByTypes = {};
-    //             let uniqueTypes = new Set(); // 用于存储唯一的类型
-    //             let features = response.features;
-
-    //             features.forEach(feature => {
-    //                 let type = feature.attributes.研究地; // type: number
-    //                 let area = feature.attributes.面积;
-    //                 // console.log("type: " + type + ", area: " + area);
-    //                 uniqueTypes.add(type);
-
-    //                 areaByTypes[type] = (areaByTypes[type] || 0) + area;
-    //             });
-    //             console.log(areaByTypes);
-
-    //             let cur_content = "<ul>" +
-    //                 "<p><b>南浔区" + layerview.layer.title + "</b></p>";
-    //             if (uniqueTypes.has(2)) {
-    //                 cur_content +=
-    //                     "<li>桑园面积：" + areaByTypes[2].toFixed(2) + " 平方米</li>";
-    //             }
-    //             if (uniqueTypes.has(3)) {
-    //                 cur_content +=
-    //                     "<li>水田面积：" + areaByTypes[3].toFixed(2) + " 平方米</li>";
-    //             }
-    //             if (uniqueTypes.has(1)) {
-    //                 cur_content +=
-    //                     "<li>鱼塘面积：" + areaByTypes[1].toFixed(2) + " 平方米</li>";
-    //             }
-    //             if (uniqueTypes.has(4)) {
-    //                 cur_content +=
-    //                     "<li>建设用地面积：" + areaByTypes[4].toFixed(2) + " 平方米</li>";
-    //             }
-    //             if (uniqueTypes.has(5)) {
-    //                 cur_content +=
-    //                     "<li>其他农用地面积：" + areaByTypes[5].toFixed(2) + " 平方米</li>";
-    //             }
-    //             if (uniqueTypes.has(6)) {
-    //                 cur_content +=
-    //                     "<li>未利用地面积：" + areaByTypes[6].toFixed(2) + " 平方米</li>";
-    //             }
-    //             cur_content += "</ul>";
-    //             resultcontent += cur_content;
-    //         }));
-    //     }
-
-    // }
 
     return (
         <>

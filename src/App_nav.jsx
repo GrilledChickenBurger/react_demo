@@ -81,7 +81,7 @@ const router2 = createBrowserRouter([
 function App() {
 
   return (
-    <VersionContext.Provider value={'0.9.0'}>
+    <VersionContext.Provider value={'0.9.5'}>
       <RouterProvider router={router2} />
     </VersionContext.Provider>
   );

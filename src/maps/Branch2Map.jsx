@@ -5,13 +5,13 @@ import Search from "@arcgis/core/widgets/Search";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import FeatureEffect from "@arcgis/core/layers/support/FeatureEffect";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
-import PopupTemplate from '@arcgis/core/PopupTemplate.js';
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 
 import BaseMapview from './BaseMapview.jsx';
 import { huzhou_group, huzhou_lpi, idx } from '../data/branch2_huzhou_shp.jsx';
 import { lu_group, edges } from '../data/branch2_nanxun_shp.jsx';
 import { tif_group } from '../data/branch2_nanxun_tif.jsx';
+import { local_group } from '../data/branch2_local_tif.jsx';
 
 import styles from './Branch2Map.module.css'
 import Expand from '@arcgis/core/widgets/Expand.js';
@@ -21,11 +21,14 @@ import Expand from '@arcgis/core/widgets/Expand.js';
 let record_tif_layergroup = new GroupLayer({
     title: "none",
     layers: [],
+    visible: true
 });
 let record_layergroup = new GroupLayer({
     title: "none",
     layers: [],
+    visible: true
 });
+let is_layergroup_change = false;
 // 全局变量，当前时间滑块表示的年份
 let initial_year = "1800";
 // 全局变量，当前图层组显示的具体图层
@@ -40,7 +43,9 @@ let record_layerview;
 
 export default function Branch2Map(props) {
     let { mapProps, viewProps } = props;
-    let { cur_year, cur_option, tif_opacity, tif_visible, shp_opacity, shp_visible } = viewProps;
+    let { cur_year, cur_dynasty, cur_option,
+        tif_opacity, tif_visible,
+        shp_opacity, shp_visible } = viewProps;
 
     const [view, setView] = useState(null);
     const mapviewRef = useRef(null);
@@ -50,9 +55,12 @@ export default function Branch2Map(props) {
     const idxRef = useRef(null);
     const RootidxRef = useRef(null);
 
+    // INITIALIZE 初始化mapview
     useEffect(() => {
         setView(BaseMapview(mapviewRef.current,
-            [tif_group, lu_group, edges, huzhou_group],
+            [   local_group,
+                tif_group, lu_group, edges,
+                huzhou_group],
             mapProps));
         return () => {
             view && view.destroy();
@@ -61,6 +69,7 @@ export default function Branch2Map(props) {
         };
     }, []);
 
+    // INITIALIZE 初始化右上角标题组件 + 景观格局expand组件
     useEffect(() => {
         if (!view) return;
         if (!selectintroRef.current) {
@@ -72,10 +81,14 @@ export default function Branch2Map(props) {
         if (!idxRef.current) {
             idxRef.current = document.createElement('div');
             idxRef.current.className = styles.idxContainer;
-            view.ui.add(idxRef.current, "top-right");
+            const expand = new Expand({
+                view: view,
+                content: idxRef.current,
+                expanded:true
+            });
+            view.ui.add(expand, "top-right");
             RootidxRef.current = ReactDOM.createRoot(idxRef.current);
         }
-        console.log("option changed: ", cur_option);
 
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (reactRootRef.current) {
@@ -83,7 +96,7 @@ export default function Branch2Map(props) {
                 <p style={{fontWeight:"bold", marginTop:0,marginBottom:0}}>当前内容：</p>
                 </>);
         }
-    }, [view, cur_option, cur_year]);
+    }, [view, cur_option, ]);
 
     // 搜索定位行政村
     // useEffect(() => {
@@ -110,9 +123,9 @@ export default function Branch2Map(props) {
     //     };
     // }, [view]);
 
-    // popup 显示景观格局指数信息
+    // 在year变化时，更新景观格局指数信息
     useEffect(() => { 
-        if (!view || !cur_option.includes('huzhou')) return;
+        if (!view || !cur_option) return;
         const tmpyear = cur_year.toString();
         // 检查 cur_year 是否是 huzhou_lpi 的一个键
         const tmpyear_info = huzhou_lpi[tmpyear];
@@ -124,33 +137,21 @@ export default function Branch2Map(props) {
         }
 
         const tmpdict = idx.map((item, index) => 
-            <li><b>{item}：</b>{tmpyear_info[index]}</li>
+            <li key={item}><b>{item}：</b>{tmpyear_info[index]}</li>
         );
 
-        // const popup = new PopupTemplate({
-        //     // view: view,
-        //     content: "hi",
-        //     dockEnabled : true,
-        //     dockOptions: {
-        //         position: "top-right",
-        //     }
-        // });
-        // const expand = new Expand({
-        //     view: view,
-        //     content: popup,
-        //     expanded:true
-        // });
-        // view.ui.add(popup, "top-right");
-
-        if (RootidxRef.current) {
+        if (RootidxRef.current && cur_option.includes("huzhou")) {
             RootidxRef.current.render(<>
                 <p style={{fontWeight:"bold", marginTop:0,marginBottom:0}}>景观格局指数：</p>
                 <ul>{tmpdict}</ul>
                 </>);
         }
-        return () => {
+        else {
             RootidxRef.current.render(null);
-        };
+        }
+        // return () => {
+        //     RootidxRef.current.render(null);
+        // };
 
     }, [view, cur_option, cur_year]);
 
@@ -182,12 +183,19 @@ export default function Branch2Map(props) {
         };
     }, [view]);
 
+    // CORE FUNCTIONS
+    // 在option、year、dynasty变化时，更新当前图层组和当前图层
     useEffect(() => {
         if (!view || !cur_option || !cur_year) return;
-
+        console.log("option changed: ", cur_option,
+            " year changed: ", cur_year, " dynasty changed: ", cur_dynasty);
+        
+        console.log("###################################");
+        is_layergroup_change = false;
         update_cur_layergroup(cur_option);
-        record_layer = initial_layer;
-        update_cur_layer(cur_year);
+        (record_layergroup.title == "local_ancient") ?
+            update_cur_layer(cur_dynasty, is_layergroup_change) :   //在图层组更新后，强制更新当前图层
+            update_cur_layer(cur_year, is_layergroup_change);
 
         if (cur_option.startsWith("landuse") || cur_option === 'ALL') {
             update_cur_tif_layergroup();
@@ -197,11 +205,10 @@ export default function Branch2Map(props) {
             update_cur_layerview();
         }
         else {
-            record_tif_layergroup.visible = false;
+            tif_group.visible = false;
             edges.visible = false;
         }
-
-
+        console.log("###################################");
         // 检查 reactRootRef.current 是否有效，再进行渲染
         if (reactRootRef.current) {
             reactRootRef.current.render(<>
@@ -209,10 +216,13 @@ export default function Branch2Map(props) {
                 {record_tif_layer.visible && <li style={{ fontSize: "medium" }}>{record_tif_layer.title}</li>}
                 </>);
         }
-    }, [view, cur_option, cur_year]);
+    }, [view, cur_option, cur_year, cur_dynasty]);
 
+    // 若当前图层组=南浔，则修改当前图层的可见性和透明度
     useEffect(() => {
-        if (!view) return;
+        // 此处能够在不会经过update函数的情况下，直接修改对应图层的visible，
+        // 若不加cur_option，就会在未选择任何选项时，提前改变landuse和tif的可见性
+        if (!view || !cur_option) return;
         view.map.layers.forEach((layer) => {
             if (layer.title == "landuse") {
                 layer.opacity = shp_opacity;
@@ -225,6 +235,7 @@ export default function Branch2Map(props) {
         });
     }, [view, tif_opacity, shp_opacity, tif_visible, shp_visible]);
 
+    // 在option变化时，根据对应图层组，修改view的中心点和缩放级别
     useEffect(() => {
         if (!view || !cur_option) return;
         if (cur_option.includes("huzhou")) {
@@ -236,14 +247,12 @@ export default function Branch2Map(props) {
             view.zoom = 12;
         }
         else {
-            view.center = [119.83, 30.71],    
-            view.zoom = 14;
+            view.center = [120.24, 31.226],    
+            view.zoom = 10;
         }
     }, [view, cur_option]);
 
-
-
-
+    // popup action 事件
     useEffect(() => {
         if (!view) return;
         reactiveUtils.on(
@@ -263,12 +272,14 @@ export default function Branch2Map(props) {
         )
     }, [view, cur_option, cur_year]);
 
+
+
     function update_cur_layergroup(name) {
         if (name.startsWith("landuse") || name === 'ALL') {
             name = "landuse";
         }
         if (record_layergroup.title == name) {
-            console.log("图层组一致，无需更新图层组。");
+            console.log("图层组一致，无需更新图层组。is layergroup change: " + is_layergroup_change);
             return;
         }
         console.log("准备更新图层组，当前图层组：" + record_layergroup.title +
@@ -282,18 +293,19 @@ export default function Branch2Map(props) {
             }
         }
         if (!isfind) {
-            console.log("未找到，使用默认图层组：huzhou");
-            new_layergroup = huzhou_group;
+            console.log("未找到. is layergroup change: " + is_layergroup_change);
+            return;
         }
 
         record_layergroup.visible = false;
         new_layergroup.visible = true;
         record_layergroup = new_layergroup;
-        console.log("成功更新图层组，当前图层组：" + record_layergroup.title);
-        console.log("==============================");
+        is_layergroup_change = true;
+        console.log("成功更新图层组，当前图层组：" + record_layergroup.title +
+            " is layergroup change: " + is_layergroup_change);
+        
+        console.log("----------------------------");
     }
-
-
 
     function update_cur_tif_layergroup() {
         if (record_tif_layergroup.title == 'tif') {
@@ -305,17 +317,17 @@ export default function Branch2Map(props) {
         tif_group.visible = true;
         record_tif_layergroup = tif_group;
         console.log("成功更新TIF图层组，当前图层组：" + record_tif_layergroup.title);
-        console.log("==============================");
+        console.log("------------------------------");
 
     }
     function update_cur_tif_layer(id) {
-        console.log("updating cur_year: ", id);
         id = typeof id === 'number' ? id.toString() : id;
-        console.log("准备更新特征图层。当前特征图层id：" + record_tif_layer.id);
         if (record_tif_layer && record_tif_layer.id == id) {
             console.log("--图层一致，无需更新图层。");
             return;
         }
+        console.log("准备更新TIF图层。当前TIF图层id：" + record_tif_layer.id
+            + "  目标id：" + id);
         let new_layer;
         if (record_tif_layergroup.findLayerById(id)) {
             new_layer = record_tif_layergroup.findLayerById(id);
@@ -323,7 +335,7 @@ export default function Branch2Map(props) {
             record_tif_layer.visible = false;
             record_tif_layer = new_layer;
             console.log("--找到一致图层，当前图层id：" + id);
-            console.log("==============================");
+            console.log("------------------------------");
             return;
         }
         // 当前图层组最早的年份
@@ -360,17 +372,18 @@ export default function Branch2Map(props) {
         // else {
         //     console.log("--不存在可更换图层，保持原状。");
         // }
-        console.log("==============================");
+        console.log("------------------------------");
 
     }
-    function update_cur_layer(id) {
+    function update_cur_layer(id, forceupdate = false) {
         id = typeof id === 'number' ? id.toString() : id;
-
-        console.log("准备更新特征图层。当前特征图层id：" + record_layer.id + "  目标id：" + id);
-        if (record_layer && record_layer.id == id) {
+        if (!forceupdate && record_layer && record_layer.id == id) {
             console.log("--图层一致，无需更新图层。");
             return;
         }
+
+        console.log("准备更新特征图层。当前特征图层id：" + record_layer.id
+            + "  目标id：" + id);
         let new_layer;
         if (record_layergroup.findLayerById(id)) {
             new_layer = record_layergroup.findLayerById(id);
@@ -378,7 +391,7 @@ export default function Branch2Map(props) {
             record_layer.visible = false;
             record_layer = new_layer;
             console.log("--找到一致图层，当前图层id：" + id);
-            console.log("==============================");
+            console.log("----------------------------");
             return;
         }
         // 当前图层组最早的年份
@@ -412,7 +425,7 @@ export default function Branch2Map(props) {
         // else {
         //     console.log("--不存在可更换图层，保持原状。");
         // }
-        console.log("==============================");
+        console.log("----------------------------");
 
     }
 

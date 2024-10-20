@@ -26,8 +26,8 @@ const tif_2024 = new ImageryTileLayer({
 export const tif_group = new GroupLayer({
     title: 'tif',
     layers: [tif_1960, tif_1970, tif_2020, tif_2024],
+    visibilityMode: 'exclusive',
     visible: false,
-    visibilityMode: 'exclusive'
 });
 tif_group.layers.forEach(element => {
     element.visible = false;

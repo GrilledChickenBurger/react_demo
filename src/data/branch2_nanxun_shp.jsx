@@ -77,8 +77,8 @@ const lu_2019 = new FeatureLayer({
 export const lu_group = new GroupLayer({
     title: "landuse",
     layers: [lu_1975, lu_2000, lu_2005, lu_2015, lu_2019],
-    visible: false,
     visibilityMode: "exclusive",
+    visible: false,
 });
 lu_group.layers.forEach(element => {
     element.visible = false;
