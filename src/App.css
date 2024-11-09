@@ -1,14 +1,13 @@
 /* 一定要导入arcgis的css文件，否则小组件无法正常显示！！！ */
 @import 'https://js.arcgis.com/4.29/@arcgis/core/assets/esri/themes/light/main.css';
 
-#root {
+/* #root {
   display: flex;
   flex-direction: column;
-  /* align-items: center;
-  justify-content: center; */
-  width:100vw;
-  height:100%;
-}
+  align-items: center;
+  justify-content: center;
+
+} */
 
 /* .logo {
   height: 6em;

@@ -1,40 +1,81 @@
 .header {
   display: flex;
-  /* 使用Flexbox布局 */
   justify-content: space-between;
-  /* 使内容两端对齐 */
   align-items: center;
-  /* 垂直居中对齐 */
 
   font-family: Arial, Helvetica, sans-serif;
 
-  height: 10vh;
-  width: 100%;
-  /* 宽度 */
+  min-height: 100px;
+  width: auto;
   padding: 1% 4%;
   box-sizing: border-box;
-  /* 让宽度包含padding和border */
-
-  background-color: #f1f1f1;
-  /* 背景颜色 */
+  background-color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  /* 添加阴影效果 */
-
+  z-index: 2;
 }
-
-.header .navbar {
+.headerContent{
   display: flex;
-  /* 使用Flexbox布局 */
-  justify-content: space-evenly;
-  /* 使内容两端对齐 */
+  justify-content: space-between;
   align-items: center;
-  /* 垂直居中对齐 */
-  font-family: Arial, Helvetica, sans-serif;
+  max-width: 1800px;
+  width:100%;
+  margin-inline:auto;
+}
+.navbar {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
   font-size: 1.5em;
-  /* 字体大小 */
   font-weight: bold;
   /* 字体粗细 */
 }
+.navbar a{
+  font-weight:500;
+}
+.navbarBtn{
+  display: none;
+}
+.navbarItems{
+  display: flex;
+  gap:20px;
+}
+
+@media screen and (max-width: 768px) {
+  .header{
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  .navbar{
+    position: absolute;
+    right: 0;
+    margin-right: 10%;
+    flex-direction: column;
+    align-items: flex-end;
+    gap:10px;
+    z-index:3;
+  }
+  .navbarBtn{
+    display: block;
+    font-size: 40px;
+    padding: 20px;
+  }
+  .navbarItems{
+    display:none;
+    flex-direction: column;
+    align-items: center;
+    gap:5px;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  }
+  .navbarOpen{
+    display: flex;
+    font-size: 0.8em;
+  }
+}
+
+
 
 .dropdownContainer {
   position: relative;

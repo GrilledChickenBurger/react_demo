@@ -20,7 +20,7 @@ const farmer_culture = new FeatureLayer({
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 export const farmer_group = new GroupLayer({
-    title: "farmer",
+    id: "farmer",
     layers: [farmer_provision, farmer_regulating, farmer_culture],
     visible: false,
     visibilityMode: "exclusive",
@@ -50,7 +50,7 @@ const enterprise_culture = new FeatureLayer({
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 export const enterprise_group = new GroupLayer({
-    title: "enterprise",
+    id: "enterprise",
     layers: [enterprise_provision, enterprise_regulating, enterprise_culture],
     visible: false,
     visibilityMode: "exclusive",
@@ -81,7 +81,7 @@ const tourist_culture = new FeatureLayer({
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 export const tourist_group = new GroupLayer({
-    title: "tourist",
+    id: "tourist",
     layers: [tourist_provision, tourist_regulating, tourist_culture],
     visible: false,
     visibilityMode: "exclusive",

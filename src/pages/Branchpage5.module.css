@@ -15,7 +15,7 @@
 
 .introTitle {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 .introContent{
   margin-right:auto; /* 左对齐 */
@@ -52,10 +52,10 @@
   justify-content: center;
   align-items: center;
 
-  /* height: 80vh; */
+  max-height:90vh;
   width: 100%;
   aspect-ratio: 16/9;
-  margin: 0;
+  margin: 10px auto 20px;
   padding: 0;
   box-sizing: border-box;
   /* 让宽度包含padding和border */
@@ -93,7 +93,7 @@
 
   height: 100%;
   width: 70%;
-  padding: 2%;
+  padding: 0% 2%;
   box-sizing: border-box;
   /* 让宽度包含padding和border */
 }
@@ -103,12 +103,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  background-color: #fafafa;
+  border: #ccc solid 1px;
   height: 100%;
   width: 30%;
   padding: 2%;
   margin-right: 2%;
   box-sizing: border-box;
+  overflow-y: auto;
+
   /* 让宽度包含padding和border */
 }
 
@@ -128,7 +131,20 @@
   font-weight: bold;
   margin: 1rem 0;
 }
-
+.guideCard{
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  background-color: #e6f7ff;
+  border:1px solid skyblue;
+  border-radius: 2px;
+}
+.card{
+  width:100%;
+}
+.card .cardContent{
+  margin-bottom: 10px;
+}
 .sideSpan {
   display: flex;
   flex-direction: column;
@@ -147,39 +163,24 @@
   /* justify-content: space-between; */
   align-items: center;
   margin-right: auto;
+  margin-bottom: 10px;
   width: 100%;
+  font-size: small;
 }
-.paramSettingContainer p{
+.paramSettingContainer span{
   text-wrap: nowrap;
-  font-size: medium;
 }
 
-.checkboxContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-right: auto;
-}
-.inputContainer {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  width: 100%;
-  max-width: 100%;
-}
 
 .infoOpenButton{
   display: flex;
-  justify-content: center;
   align-items: center;
   margin-left: 10px;
   font-size: small;
   font-weight: lighter;
   cursor: pointer;
+  color: #0077cc;
+  text-wrap: nowrap;
 }
 .infoOpenButton:hover{
   color: skyblue;
@@ -210,6 +211,7 @@
   justify-content: center;
   align-items: center;
   width: 100% ;
+  min-height: 40px;
   background-color: green;
   color: white;
   border-radius: 5px;
@@ -222,6 +224,8 @@
   justify-content: center;
   padding:0 2%;
   box-sizing: border-box;
+  overflow-y: auto;
+
 }
 .finalModalItem{
   display: flex;

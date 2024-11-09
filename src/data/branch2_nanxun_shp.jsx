@@ -1,6 +1,10 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 
+export const nanxun_ids = ['1960', '1970', '1975', '2000', '2005','2015','2020','2025'];
+export const nanxun_labelidx = [0, 2, 4, 6, 7];
+
+
 // 设置 popupTemplate
 const showOnly = {
     title: "仅显示该村数据",
@@ -75,7 +79,7 @@ const lu_2019 = new FeatureLayer({
 });
 
 export const lu_group = new GroupLayer({
-    title: "landuse",
+    id: "nanxun_landuse",
     layers: [lu_1975, lu_2000, lu_2005, lu_2015, lu_2019],
     visibilityMode: "exclusive",
     visible: false,

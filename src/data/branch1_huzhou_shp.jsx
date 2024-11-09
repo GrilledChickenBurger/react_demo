@@ -1,7 +1,29 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
+import * as colorSchemes from "@arcgis/core/smartMapping/symbology/color.js";
 
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
+
+// 对人口图层，设置 不同指标的 renderer
+const renderer_info = {
+    '人口密': 'Orange 4',
+    '人口增': 'Red 6',
+};
+
+export const huzhou_pop_params = {};
+for (const key in renderer_info) {
+    huzhou_pop_params[key] = {
+        field: key,
+        classificationMethod: "quantile",
+        numClasses: 5,
+        colorScheme: colorSchemes.getSchemeByName({
+            name: renderer_info[key],
+            geometryType: 'polygon',
+            theme: 'high-to-low'
+        }),
+    };
+}
+
 
 // 设置 popupTemplate
 const showOnly = {
@@ -21,7 +43,7 @@ const showALL = {
 };
 const lu_popup_template = {
     // autocasts as new PopupTemplate()
-    title: "湖州{SJNF}各行政村信息",
+    title: "湖州乡村 土地利用 {SJNF}年",
     actions: [showOnly, showALL],
     content: [{
         type: "text",
@@ -50,7 +72,7 @@ const lu_popup_template = {
 
 const income_popup_template = {
     // autocasts as new PopupTemplate()
-    title: "湖州{SJNF}各行政村年度人均收入信息",
+    title: "湖州乡村 收入情况 {SJNF}年",
     content: [{
         type: "text",
         text: "<b>所在位置：湖州市，{XZQMC}</b>",
@@ -72,7 +94,7 @@ const income_popup_template = {
 
 const tourist_popup_template = {
     // autocasts as new PopupTemplate()
-    title: "湖州{SJNF}各行政村年度游客量信息",
+    title: "湖州乡村 游客量 {SJNF}年",
     content: [{
         type: "text",
         text: "<b>所在位置：湖州市，{XZQMC}</b>",
@@ -104,31 +126,7 @@ const tourist_popup_template = {
     }],
 };
 
-const csj_popup_template = {
-    // autocasts as new PopupTemplate()
-    title: "长三角27个城市信息",
-    content: [{
-        type: "text",
-        text: "<b>所在位置：{省}，{市}</b>" +
-            "<li>市代码：{市代码}</li>" +" <li>市类型：{市类型}</li>",
-    },
-    {
-        type: "fields",
-        fieldInfos: [{
-            fieldName: "省",       // fieldname需是featurelayer里已有的字段名，用来寻找单击点的数据
-            label: "省"              // popup表格的表头信息
-        }, {
-            fieldName: "市",       // fieldname需是featurelayer里已有的字段名，用来寻找单击点的数据
-            label: "市"              // popup表格的表头信息
-        }, {
-            fieldName: "市代码",
-            label: "市代码"
-        }, {
-            fieldName: "市类型",
-            label: "市类型"
-        }, ],
-    }],
-};
+
 
 const village_popup_template = {
     // autocasts as new PopupTemplate()
@@ -143,13 +141,13 @@ const village_popup_template = {
 // 具体图层
 
 const lu_2019 = new FeatureLayer({
-    title: "湖州市2019年土地利用情况",
+    title: "湖州乡村 土地利用 2019年",
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/huzhou2019_lu_noborder/FeatureServer",
     id: "2019",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 export const lu_group = new GroupLayer({
-    title: "landuse",
+    id: "landuse",
     layers: [lu_2019],
     visible: false,
     visibilityMode: "exclusive",
@@ -160,13 +158,13 @@ lu_group.layers.forEach(element => {
 });
 
 const income_2019 = new FeatureLayer({
-    title: "湖州市2019年人均收入",
+    title: "湖州乡村 收入情况 2019年",
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/huzhou2019_income/FeatureServer",
     id: "2019",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 export const income_group = new GroupLayer({
-    title: "income",
+    id: "income",
     layers: [income_2019],
     visible: false,
     visibilityMode: "exclusive",
@@ -178,13 +176,13 @@ income_group.layers.forEach(element => {
 
 
 const tourist_2022 = new FeatureLayer({
-    title: "湖州市2022年旅游景点",
+    title: "湖州乡村 游客量 2022年",
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/huzhou2022_tourist/FeatureServer",
     id: "2022",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
 });
 export const tourist_group = new GroupLayer({
-    title: "tourist",
+    id: "tourist",
     layers: [tourist_2022],
     visible: false,
     visibilityMode: "exclusive",
@@ -194,6 +192,21 @@ tourist_group.layers.forEach(element => {
     element.popupTemplate = tourist_popup_template;
 });
 
+const pop_2020 = new FeatureLayer({
+    title: "湖州乡村 人口信息 2020年",
+    url:"https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/huzhou2020_population/FeatureServer",
+    id: "2020",
+    outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
+});
+export const pop_group = new GroupLayer({
+    id: "population",
+    layers: [pop_2020],
+    visibilityMode:"exclusive",
+    visible: false,
+});
+pop_group.layers.forEach(element => {
+    element.visible = false;
+});
 
 // 最顶端：湖州市边界图层
 

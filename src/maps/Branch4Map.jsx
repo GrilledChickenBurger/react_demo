@@ -6,7 +6,8 @@ import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 
 import BaseMapview from './BaseMapview.jsx';
-import SelectBox from '../widgets/SelectBox.jsx';
+import SelectBox from '../to_improve/SelectBox.jsx';
+import GroupColumnChart from '../widgets/GroupColumnChart.jsx';
 import { lu_2015, lu_2019 } from '../data/branch4_shp.jsx';
 import { ES2015, ES2019 } from '../data/branch4_tif.jsx';
 
@@ -36,8 +37,9 @@ const option_info = [
 ];
 
 export default function Branch4Map(props) {
-    let { mapProps, viewProps, setResult } = props;
+    let { mapProps, viewProps, otherProps } = props;
     let { res_visible, } = viewProps;
+    let { setResult } = otherProps;
 
     const [view2015, setView2015] = useState(null); // 左上view: LU_2015
     const [viewES2015, setViewES2015] = useState(null); // 左下view: ES_2015
@@ -268,6 +270,7 @@ export default function Branch4Map(props) {
 
     // 在res_visible = true时，筛选LU = 1 2 3
     useEffect(() => {
+        console.log("res_visible changed: ", res_visible);
         if (!view2015 || !view2019) return;
         update_cur_layerview(res_visible);
     }, [res_visible]);
@@ -349,7 +352,7 @@ export default function Branch4Map(props) {
         });
     }
 
-    function filter_layerview(option = "landuse-1_2_3") {
+    function filter_layerview(option = "landuse-1_2_3_4_5") {
         const allTypes = ["1", "2", "3", "4", "5", "6"]; // 这里定义所有类型
         const matchedTypes = option.match(/\d/g) || []; // 获取所有数字，默认为空数组
         const uniqueFilteredTypes = [...new Set(matchedTypes)]; // 去重
@@ -357,7 +360,10 @@ export default function Branch4Map(props) {
         console.log("筛选的类型：" + validFilteredTypes.join(', '));
 
         let resultcontent = "";
+        let xdata = [];
+        let ydata = [];
         const queries = [];
+
         for (const layerview of [record_2015_layerview, record_layerview]) {
             if (validFilteredTypes.length > 0) {
                 // 使用 IN 子句
@@ -393,38 +399,60 @@ export default function Branch4Map(props) {
                 });
                 console.log(areaByTypes);
 
+                let cur_year = layerview.layer.id;
+                let cur_ydata = [];
                 let cur_content = "<ul>" +
                     "<p><b>" + layerview.layer.title + "</b></p>";
                 if (uniqueTypes.has(2)) {
                     cur_content +=
                         "<li>桑园面积：" + areaByTypes[2].toFixed(2) + " 平方米</li>";
+                    !(xdata.includes("桑园")) ? xdata.push("桑园") : null;
+                    cur_ydata.push(areaByTypes[2]);
                 }
                 if (uniqueTypes.has(3)) {
                     cur_content +=
                         "<li>水田面积：" + areaByTypes[3].toFixed(2) + " 平方米</li>";
+                    !(xdata.includes("水田")) ? xdata.push("水田") : null;
+                    cur_ydata.push(areaByTypes[3]);
                 }
                 if (uniqueTypes.has(1)) {
                     cur_content +=
                         "<li>鱼塘面积：" + areaByTypes[1].toFixed(2) + " 平方米</li>";
+                    !(xdata.includes("鱼塘")) ? xdata.push("鱼塘") : null;
+                    cur_ydata.push(areaByTypes[1]);
                 }
                 if (uniqueTypes.has(4)) {
                     cur_content +=
                         "<li>建设用地面积：" + areaByTypes[4].toFixed(2) + " 平方米</li>";
+                    !( xdata.includes("建设用地")) ? xdata.push("建设用地") : null;
+                    cur_ydata.push(areaByTypes[4]);
                 }
                 if (uniqueTypes.has(5)) {
                     cur_content +=
                         "<li>其他农用地面积：" + areaByTypes[5].toFixed(2) + " 平方米</li>";
+                    !( xdata.includes("其他农用地")) ? xdata.push("其他农用地") : null;
+                    cur_ydata.push(areaByTypes[5]);
                 }
                 if (uniqueTypes.has(6)) {
                     cur_content +=
                         "<li>未利用地面积：" + areaByTypes[6].toFixed(2) + " 平方米</li>";
+                    !( xdata.includes("未利用地")) ? xdata.push("未利用地") : null;
+                    cur_ydata.push(areaByTypes[6]);
                 }
                 cur_content += "</ul>";
                 resultcontent += cur_content;
+                ydata.push({name: cur_year, data:cur_ydata});
             }));
         }
         Promise.all(queries).then(() => {
-            setResult(resultcontent);
+            const chart_settings = {
+                x_data: {name: '类型', data: xdata},
+                y_data: {name: '面积（平方米）', data: ydata},
+                title: '2015-2019年土地利用类型柱状图',
+                isGroup: true,
+            };
+            console.log(chart_settings);
+            setResult(chart_settings);
         });
 
     }

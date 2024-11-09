@@ -1,51 +1,28 @@
 import { Breadcrumb } from 'antd';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useRoutes } from 'react-router-dom';
 
 import styles from "./BreadCrumb.module.css";
 
-const route = [{
-    path: '/',
-    breadcrumbName: '首页',
-}, {
-    path:'/analysis',
-    breadcrumbName: '数据分析',
-},
-{
-    path: '/analysis/branch1',
-    breadcrumbName: '可持续评估',
-},
-{
-    path: '/analysis/branch2',
-    breadcrumbName: '景观格局评估',
-},
-{
-    path: '/analysis/branch3',
-    breadcrumbName: '生态系统服务分析',
-},
-{
-    path: '/analysis/branch4',
-    breadcrumbName: '景观格局-生态服务分析',
-
-},
-{
-    path: '/analysis/branch5',
-    breadcrumbName: '空间优化',
-    },
-    {
-        path: '/analysis/branch5/pre_simulation',
-        breadcrumbName: '初始设置-预模拟',
-    },
-    {
-        path: '/analysis/branch5/formal_simulation',
-        breadcrumbName: '正式模拟',
-    },
-];
 
 export function BreadCrumb() {
+    const [addrMap, setAddrMap] = useState(null); // 使用状态来存储 addrMap
     const location = useLocation();
-    const breadcrumbNameMap = route.reduce((obj, item) => {
-        obj[item.path] = item.breadcrumbName;
+
+    useEffect(() => {
+        const loadAddrMap = async () => {
+            const module = await import('../router'); // 动态导入
+            setAddrMap(module.addrMap); // 将 addrMap 设置到状态中
+        };
+        loadAddrMap();
+    }, []);
+    // 等待 addrMap 初始化完成
+    if (!addrMap) {
+        return null; // 或者可以返回加载中的状态
+    }
+
+    const breadcrumbNameMap = addrMap.reduce((obj, item) => {
+        obj[item.path] = item.label;
         return obj;
     }, {});
 

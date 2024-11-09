@@ -26,7 +26,9 @@ function Card(props) {
 
     return (
         <div className={styles.card} onClick={handleClick}>
-            <img className={styles.cardImg} src={Img.src} alt={Img.alt}></img>
+            <div className={styles.cardImgContainer} >
+                <img className={styles.cardImg} src={Img.src} alt={Img.alt}></img>   
+            </div>
             <h2 className={styles.cardTitle} ><Link to={address}>{title}</Link></h2>
             <div className={styles.cardText}>
                 {description.map((desc, index) => (

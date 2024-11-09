@@ -3,7 +3,7 @@
   height: 100%;
   width: 50%;
   float:left;
-  padding: 10px;
+  padding: 0px 10px;
   box-sizing: border-box;
   /* 让宽度包含padding和border */
 }
@@ -11,7 +11,7 @@
 .mapRealView {
     height: 100%;
     width: 50%;
-    padding: 10px;
+    padding: 0px 10px;
     box-sizing: border-box;
     /* 让宽度包含padding和border */
   }

@@ -1,20 +1,17 @@
 
-.mapContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  height: 60vh;
-  width: 100vw;
+.mapViewContent {
+  display: block;
+  height: 50vh;
+  width:auto;
+  max-width: 1600px;
   padding: 2%;
   box-sizing: border-box; /* 让宽度包含padding和border */
+  margin-inline: auto;
 }
 
-.mapContainer >.mapView {
+.mapView {
   height:100%;
   width:100%;
-  box-sizing: border-box; /* 让宽度包含padding和border */
 }
 
 .introContainer{

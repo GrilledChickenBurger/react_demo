@@ -59,9 +59,9 @@ function IndexMap() {
 
         // 小组件：介绍展开框
         const introContent = <div className={styles.introContent}>
-            <h3>欢迎使用湖州市县总览地图！</h3>
-            <p>湖州市县总览地图是湖州市县的地理信息系统，主要用于湖州市县的地理信息展示、分析、决策支持。地图上呈现了湖州市县的边界、地貌、经济、文化、交通等多种信息，并提供了便捷的查询、分析、决策支持功能。</p>
-            <p>本系统由湖州市县信息中心提供技术支持，由湖州市县信息中心的地理信息系统开发团队开发维护。开发团队成员来自于湖州市县信息中心、湖州市县政府、湖州市县企业、湖州市县学校、湖州市县媒体等多方面，他们共同努力，为湖州市县的发展提供有力的支撑。</p>
+            <h3>欢迎使用地理设计平台！</h3>
+            <p>本平台由浙江大学地理设计团队开发维护。地理设计是一种新兴的规划理念与规划方法，由新一代空间信息技术提供支持，可提供强大的分析和模拟功能。</p>
+            <p>本平台希望在景观可持续(Landscape Sustainability Science)理论支撑下，开展地理设计在城乡景观中的实践，并结合GIS、三维建模、3D打印、人工智能等技术，建立一个与学科紧密度高的地理设计平台，从而推动地理设计领域进一步发展。</p>
         </div>;
         const introContainer = document.createElement('div');
         introContainer.className = styles.introContainer;
@@ -146,7 +146,7 @@ function IndexMap() {
 
 
     return (
-        <div className={styles.mapContainer}>
+        <div className={styles.mapViewContent}>
             <div ref={mapviewRef} className={styles.mapView} />
             
         </div>

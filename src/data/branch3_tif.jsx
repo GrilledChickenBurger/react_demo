@@ -62,13 +62,13 @@ export const service_group = new GroupLayer({
     visibilityMode: "exclusive",
 });
 export const service_group1 = new GroupLayer({
-    title: "service1",
+    id: "service1",
     layers: [provision1, regulating1, culture1],
     visible: false,
     visibilityMode: "exclusive",
 });
 export const service_group2 = new GroupLayer({
-    title: "service2",
+    id: "service2",
     layers: [provision2, regulating2, culture2],
     visible: false,
     visibilityMode: "exclusive",
@@ -129,7 +129,7 @@ const tourist_provision_res = new ImageryTileLayer({
 });
 
 export const result_group = new GroupLayer({
-    title:"result",
+    id:"result",
     layers:[farmer_regulating_res, farmer_culture_res, farmer_provision_res,
         enterprise_regulating_res, enterprise_culture_res, enterprise_provision_res,
         tourist_regulating_res,tourist_culture_res, tourist_provision_res

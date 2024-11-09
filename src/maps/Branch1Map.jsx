@@ -10,16 +10,16 @@ import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 import * as colorRendererCreator from "@arcgis/core/smartMapping/renderers/color.js";
 
 import BaseMapview from './BaseMapview.jsx';
-import { lu_group, income_group, tourist_group, huzhou_edges, } from '../data/branch1_huzhou_shp.jsx';
-import { pop_group, total_group } from '../data/branch1_huzhou_tif.jsx';
-import { CSJ_group, CSJ_params, csj_edges, csj0_group } from '../data/branch1_csj_shp.jsx';
+import { lu_group, income_group, tourist_group, pop_group, huzhou_pop_params, huzhou_edges, } from '../data/branch1_huzhou_shp.jsx';
+import {  total_group, total1_group, total2_group, total3_group } from '../data/branch1_huzhou_tif.jsx';
+import { CSJ_group, CSJ_params, csj_edges } from '../data/branch1_csj_shp.jsx';
 
 import styles from './Branch1Map.module.css'
 
 
 // 全局变量，当前显示的图层组
 let record_layergroup = new GroupLayer({
-    title: "none",
+    id: "none",
     layers: [],
 });
 let is_layergroup_change = false;
@@ -32,6 +32,17 @@ let initial_layer = {
 };
 let record_layer = initial_layer;
 let record_layerview;
+
+const csj_info = {
+    GPI:"真实发展指数（人均）",
+    'GDP': "国民生产总值（人均）",
+    'EF': "生态足迹（人均）",
+    'ECC': "生物承载力（人均）",
+};
+const population_info = {
+    '人口密': "人口密度",
+    '人口增': "人口增长率",
+};
 
 
 export default function Branch1Map(props) {
@@ -49,15 +60,16 @@ export default function Branch1Map(props) {
     // INITIALIZE 初始化mapview
     useEffect(() => {
         setView(BaseMapview(mapviewRef.current,
-            [pop_group,
-                income_group, tourist_group,
-                lu_group,
+            [
+                pop_group, total3_group,
+                income_group, tourist_group, total2_group,
+                lu_group, total1_group,
                 total_group,
                 huzhou_edges,
 
                 CSJ_group,
-                csj0_group,
-                csj_edges],
+                csj_edges
+            ],
             // { ...mapProps, widgets_list: [{ item: search_village, position: "top-right" }] }
             mapProps
         ));
@@ -176,12 +188,27 @@ export default function Branch1Map(props) {
         else if (cur_option.includes('csj27')) {    // csj27: 需要更改renderer展示不同字段的数据
             update_csj_renderer();
         }
+        else if (cur_option.includes('population')) {    // population: 需要更改renderer展示不同字段的数据
+            update_population_renderer();
+        }
         console.log("###################################");
 
         if (reactRootRef.current) {
-            reactRootRef.current.render(<>
-                <li style={{ fontSize: "medium" }}>{record_layer.title}</li>
-            </>);
+            if(cur_option.includes("csj27")) {
+                reactRootRef.current.render(<>
+                    <li style={{ fontSize: "medium" }}>长三角 {csj_info[cur_option.split("_")[1]]} {cur_year}年</li>
+                </>);
+            }
+            else if(cur_option.includes("population")) {
+                reactRootRef.current.render(<>
+                    <li style={{ fontSize: "medium" }}>湖州乡村 {population_info[cur_option.split("_")[1]]} {cur_year}年</li>
+                </>);
+            }
+            else {
+                reactRootRef.current.render(<>
+                    <li style={{ fontSize: "medium" }}>{record_layer.title}</li>
+                </>);
+            }
         }
 
     }, [view, cur_option, cur_year]);
@@ -204,60 +231,154 @@ export default function Branch1Map(props) {
         }
     }, [view, cur_option]);
 
-    // 对tif类型的population，添加单击查询像素值的查询函数
+    // // 对tif类型的population，添加单击查询像素值的查询函数
+    // useEffect(() => {
+    //     if (!view) return;
+    //     const getClickInfo = async (event) => {
+    //         if (record_layergroup.id == "population" || record_layergroup.id == "total") {
+    //             record_layer.identify(event.mapPoint).then(response => {
+    //                 if (!response.value) {
+    //                     console.log("此处无数据");
+    //                     return;
+    //                 }
+    //                 setPopupInfo({
+    //                     year: record_layer.id,
+    //                     value: String(response.value[0]),
+    //                     lat: String(event.mapPoint.latitude),
+    //                     lon: String(event.mapPoint.longitude),
+    //                 });
+
+    //             });
+    //         }
+    //     };
+
+    //     const handle = view.on("click", getClickInfo);
+    //     return () => {
+    //         handle.remove();
+    //     };
+    // }, [view]);
+
+    // // 对tif类型的population，添加popup模板
+    // useEffect(() => {
+    //     if (!view) return;
+    //     let popup_content0 = selectedCountyAttribute ?
+    //         "<b>所在位置：湖州市，" + selectedCountyAttribute.XZQMC + "</b><br />"
+    //         : "<b>所在位置：湖州市";
+    //     function update_population_popup() {
+    //         return popup_content0
+    //             + "<ul>" +
+    //             "<li>数据年份：" + popup_info.year + "</li>" +
+    //             "<li>人口数量：" + popup_info.value + "</li>" +
+    //             // "<li>纬度：" + popup_info.lat + "</li>" +
+    //             // "<li>经度：" + popup_info.lon + "</li>" +
+    //             "</ul>";
+    //     }
+    //     function update_total_popup() {
+    //         return popup_content0
+    //             + "<ul>" +
+    //             "<li>数据年份：" + popup_info.year + "</li>" +
+    //             "<li>总体评估结果：" + popup_info.value + "</li>" +
+    //             "</ul>";
+    //     }
+
+    //     pop_group.layers.forEach(layer => {
+    //         layer.popupTemplate = {
+    //             title: record_layer.title,
+    //             content: update_population_popup(),
+    //         };
+    //     });
+    //     total_group.layers.forEach(layer => {
+    //         layer.popupTemplate = {
+    //             title: record_layer.title,
+    //             content: update_total_popup(),
+    //         };
+    //     });
+
+    //     return () => {
+    //         pop_group.layers.forEach(layer => {
+    //             layer.popupTemplate = null;
+    //         });
+    //         total_group.layers.forEach(layer => {
+    //             layer.popupTemplate = null;
+    //         });
+    //     };
+
+    // }, [view, popup_info, selectedCountyAttribute]);
+
+    // 对csj27类型的csj，根据选项设置popup模板
     useEffect(() => {
-        if (!view) return;
-        const getClickInfo = async (event) => {
-            if (record_layergroup.title == "population") {
-                record_layer.identify(event.mapPoint).then(response => {
-                    if (!response.value) {
-                        console.log("此处无人口数据");
-                        return;
-                    }
-                    setPopupInfo({
-                        year: record_layer.id,
-                        value: String(response.value[0]),
-                        lat: String(event.mapPoint.latitude),
-                        lon: String(event.mapPoint.longitude),
-                    });
-
-                });
-            }
-        };
-
-        const handle = view.on("click", getClickInfo);
-        return () => {
-            handle.remove();
-        };
-    }, [view]);
-
-    // 对tif类型的population，添加popup模板
-    useEffect(() => {
-        if (!view) return;
-        // console.log(popup_info);
+        if (!view || !cur_option) return;
+        if (!cur_option.startsWith("csj27")) return;
+        const tmp_field = cur_option.split("_")[1];
+        const tmp_title = csj_info[tmp_field];
         function update_popup() {
-            return "<ul>" +
-                "<li>年份：" + popup_info.year + "</li>" +
-                "<li>人口：" + popup_info.value + "</li>" +
-                "<li>纬度：" + popup_info.lat + "</li>" +
-                "<li>经度：" + popup_info.lon + "</li>" +
-                "</ul>";
+            return [{
+                type: "text",
+                text: "<b>所在位置：{省}，{市}</b>",
+            },
+            {
+                type: "fields",
+                fieldInfos: [{
+                    fieldName: "SJNF",       // fieldname需是featurelayer里已有的字段名，用来寻找单击点的数据
+                    label: "数据年份"              // popup表格的表头信息
+                }, {
+                    fieldName: tmp_field,       // fieldname需是featurelayer里已有的字段名，用来寻找单击点的数据
+                    label: tmp_title              // popup表格的表头信息
+                }],
+            }];
         }
-
-        pop_group.layers.forEach(layer => {
+        CSJ_group.layers.forEach(layer => {
             layer.popupTemplate = {
-                title: record_layer.title,
+                title: `长三角 ${tmp_title} {SJNF}年`,
                 content: update_popup(),
             };
         });
+        return () => {
+            CSJ_group.layers.forEach(layer => {
+                layer.popupTemplate = null;
+            });
+        };
 
+    }, [view, cur_option]);
+
+    // 对population，根据选项设置popup模板
+    useEffect(() => {
+        if (!view || !cur_option) return;
+        if (!cur_option.startsWith("population")) return;
+        const tmp_field = cur_option.split("_")[1];
+        const tmp_title = population_info[tmp_field];
+        function update_popup() {
+            return [{
+                type: "text",
+                text: "<b>所在位置：湖州市，{XZQMC}</b>",
+            },
+            {
+                type: "fields",
+                fieldInfos: [{
+                    fieldName: "SJNF",
+                    label: "数据年份"
+                },{
+                    fieldName: "XZQMC",
+                    label: "行政村名称"
+                },{
+                    fieldName: tmp_field, 
+                    label: tmp_title
+                }],
+            }];
+        }
+        pop_group.layers.forEach(layer => {
+            layer.popupTemplate = {
+                title: `湖州乡村 ${tmp_title} {SJNF}年`,
+                content: update_popup(),
+            };
+        });
         return () => {
             pop_group.layers.forEach(layer => {
                 layer.popupTemplate = null;
             });
         };
 
-    }, [view, popup_info]);
+    }, [view, cur_option]);
 
     // 对show-this-county、show-this-village，添加点击获取顶端edge图层geometry的事件
     useEffect(() => {
@@ -266,10 +387,10 @@ export default function Branch1Map(props) {
         const getClickGeo = async (event) => {
             // 使用视图的 hitTest 来查找图层
             const response = await view.hitTest(event);
-            const edgeFeature = response.results.find(result => result.graphic.layer.id === 'edges'); // 确保使用正确的边缘图层标题
+            const edgeFeature = response.results.find(result => result.graphic.layer.id === 'huzhou_edges'); // 确保使用正确的边缘图层标题
 
             if (edgeFeature) {
-                console.log("成功获取edge图层的区县mask");
+                console.log("成功获取edge图层的行政村mask");
                 const edgeGeometry = edgeFeature.graphic.geometry; // 获取边界几何
                 const edgeAttributes = edgeFeature.graphic.attributes; // 获取边界属性
                 // console.log(edgeFeature);
@@ -325,16 +446,16 @@ export default function Branch1Map(props) {
         else if (name.startsWith("population")) {
             name = "population";
         }
-        if (record_layergroup.title == name) {
+        if (record_layergroup.id == name) {
             console.log("图层组一致，无需更新图层组。");
             return;
         }
 
-        console.log("准备更新图层组，当前图层组：" + record_layergroup.title +
+        console.log("准备更新图层组，当前图层组：" + record_layergroup.id +
             " 目标图层组：" + name);
         let new_layergroup; let isfind = false;
         for (const element of view.map.layers) {
-            if (element.title == name) {
+            if (element.title && element.title == name|| element.id == name) {
                 new_layergroup = element;
                 isfind = true;
                 break;
@@ -349,8 +470,8 @@ export default function Branch1Map(props) {
         new_layergroup.visible = true;
         record_layergroup = new_layergroup;
         is_layergroup_change = true;
-        console.log("成功更新图层组，当前图层组：" + record_layergroup.title +
-            "is layergroup change: " + is_layergroup_change);
+        console.log("成功更新图层组，当前图层组：" + record_layergroup.id +
+            " is layergroup change: " + is_layergroup_change);
         
         console.log("----------------------------");
 
@@ -420,9 +541,25 @@ export default function Branch1Map(props) {
                 .then(response => {
                     element.renderer = response.renderer;
                 });
+
         })
         console.log("成功更新 renderer。");
     }
+
+    function update_population_renderer() {
+        const tmp_field = cur_option.split("_")[1];
+        const tmp_param = huzhou_pop_params[tmp_field];
+        console.log("准备更新renderer。当前字段：" + tmp_field);
+        pop_group.layers.forEach(element => {
+            let tmp_layer_param = { ...tmp_param, layer: element };
+            colorRendererCreator.createClassBreaksRenderer(tmp_layer_param)
+                .then(response => {
+                    element.renderer = response.renderer;
+                });
+        })
+        console.log("成功更新 renderer。");
+    }
+
 
 
     function update_cur_layerview() {
@@ -430,7 +567,7 @@ export default function Branch1Map(props) {
             record_layerview = layerview;
             console.log("更新layerview");
 
-            if (record_layergroup.title == "landuse") {
+            if (record_layergroup.id == "landuse") {
                 filter_layerview(cur_option);
             }
         });

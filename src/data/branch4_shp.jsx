@@ -21,7 +21,7 @@ const lu_popup_template = {
 
 export const lu_2015 = new FeatureLayer({
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/nanxun2015_lu_1/FeatureServer",
-    title: "南浔区2015年土地利用情况",
+    title: "南浔区2015年景观分类情况",
     id: "2015",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
     popupTemplate: lu_popup_template,
@@ -29,7 +29,7 @@ export const lu_2015 = new FeatureLayer({
 });
 export const lu_2019 = new FeatureLayer({
     url: "https://services9.arcgis.com/vBCQ4PWZkZBueexC/arcgis/rest/services/nanxun2019_lu_1/FeatureServer",
-    title: "南浔区2019年土地利用情况",
+    title: "南浔区2019年景观分类情况",
     id: "2019",
     outFields: ["*"],    // 若后续需要featurefilter，则需要设置此项
     popupTemplate: lu_popup_template,

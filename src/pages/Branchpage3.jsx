@@ -1,8 +1,10 @@
 import React, { useContext, useState, lazy, Suspense } from 'react';
+import { Card, Divider, Button } from 'antd';
 
 import Header from '../components/Header.jsx'
 import Footer from '../components/Footer.jsx'
-import SelectBox from '../widgets/SelectBox.jsx';
+import SelectBox from '../to_improve/SelectBox.jsx';
+import SelectGroup from '../widgets/SelectGroup.jsx';
 import styles from './Branchpage3.module.css';
 const Branch3Map = lazy(() => import('../maps/Branch3Map.jsx'));
 
@@ -14,13 +16,22 @@ const service_info = [
     { value: "regulating", label: "调节服务" },
     { value: "culture", label: "文化服务" },
 ];
+const service_info2 = [
+    { value: "provision", title: "供给服务" },
+    { value: "regulating", title: "调节服务" },
+    { value: "culture", title: "文化服务" },
+];
 
 const base_info = [
     { value: "farmer", label: "农民" },
     { value: "enterprise", label: "企业" },
     { value: "tourist", label: "游客" },
 ];
-
+const base_info2 = [
+    { value: "farmer", title: "农民" },
+    { value: "enterprise", title: "企业" },
+    { value: "tourist", title: "游客" },
+];
 
 export default function BranchPage3() {
 
@@ -65,7 +76,7 @@ export default function BranchPage3() {
                 </div>
                 {/* ======================================================== */}
                 <div className={styles.sideSpanContainer}>
-                    <SideSpan service_option={service_option} setServiceOption={setServiceOption}
+                    <SideSpan2 service_option={service_option} setServiceOption={setServiceOption}
                         base_option={base_option} setBaseOption={setBaseOption}
                         result_opacity={result_opacity} setResultOpacity={setResultOpacity}
                         result_visible={result_visible} setResultVisible={setResultVisible} />
@@ -114,7 +125,7 @@ export function BranchPiece3() {
 
             {/* ======================================================== */}
             <div className={styles.sideSpanContainer}>
-                <SideSpan service_option={service_option} setServiceOption={setServiceOption}
+                <SideSpan2 service_option={service_option} setServiceOption={setServiceOption}
                     base_option={base_option} setBaseOption={setBaseOption}
                     result_opacity={result_opacity} setResultOpacity={setResultOpacity}
                     result_visible={result_visible} setResultVisible={setResultVisible} />
@@ -125,13 +136,24 @@ export function BranchPiece3() {
 
 }
 
-function SideSpan({ service_option, setServiceOption,
+function SideSpan2({ service_option, setServiceOption,
     base_option, setBaseOption,
     result_opacity, setResultOpacity,
     result_visible, setResultVisible }) {
 
-    const guide = <><li><b>左侧内容：各生态系统服务；</b></li>
-        <li><b>右侧内容：各主体对各服务的热点分析</b> </li></>
+    const guide = <>
+        <li><b>左图：</b>各生态系统服务</li>
+        <li><b>右图：</b>结合不同利益相关者对生态系统服务的态度所得到的生态系统服务量化结果及热点分析</li>
+        点击显示结果，可查看生态系统服务量化结果；点击隐藏结果，可暂时隐藏结果。
+    </>
+    const guideCard =
+        <Card title="操作说明" className={styles.guideCard}
+            headStyle={{
+                backgroundColor: '#cbebff',
+                borderBottom: '1px solid skyblue',
+            }}>
+            {guide}
+        </Card>;
 
     const base_label = base_option === "farmer" ? "农民" :
         base_option === "enterprise" ? "企业" :
@@ -142,31 +164,32 @@ function SideSpan({ service_option, setServiceOption,
 
     return (
         <div className={styles.sideSpanContent}>
-            <h1 className={styles.sideSpanTitle}>操作台</h1>
-
-            <p style={{ marginTop: "0" }}>{guide}</p>
-            <hr style={{ width: "100%", height: "1px", backgroundColor: "gray" }} />
+            <h1 className={styles.sideSpanTitle}>生态系统服务分析</h1>
+            {guideCard}
+            <Divider />
 
             <div className={styles.sideSpan}>当前选项：
                 {base_label && service_label && `${base_label}，${service_label}`}
-                {/* <div className={styles.sideSpanLabel}>
-                    当前选项：
-                    {base_label && service_label && `${base_label}，${service_label}`}
-                </div> */}
-                <div className={styles.selectBoxContainer}>
-                    <p>生态服务（左）：</p>
-                    <SelectBox items={service_info} handleSelectChange={(event) => { setServiceOption(event.target.value); }} />
-                </div>
-                <div className={styles.selectBoxContainer}>
-                    <p>主体（右）：</p>
-                    <SelectBox items={base_info} handleSelectChange={(event) => { setBaseOption(event.target.value); }} />
-                </div>
             </div>
-            <hr style={{ width: "100%", height: "1px", backgroundColor: "gray" }} />
+            <Card title={`生态服务（左）：${service_label}`} className={styles.card} >
+                <SelectGroup selectinfo={service_info2} handleSelectChange={setServiceOption} />
+            </Card>
+            <Card title={`主体（右）：${base_label}`} className={styles.card}>
+                <SelectGroup selectinfo={base_info2} handleSelectChange={setBaseOption} />
+            </Card>
 
-            <div className={styles.sideSpan}>结果: {base_label} 对于 {service_label} 服务的态度
+            {base_option && service_option && <>
+                <Card style={{ marginTop: "8px" }} className={styles.card}>
+                    <b>结果：{base_label} 对于 {service_label} 服务的态度</b> 
+                    <Button className={styles.sideSpanButton}
+                        onClick={() => setResultVisible(!result_visible)}>{result_visible ? "隐藏结果" : "显示结果"}</Button>
+                </Card>
 
-                {/* <p style={{ marginBottom: "8px", fontSize: "medium", fontWeight: "bold" }}>结果透明度: {result_opacity * 100}%</p>
+
+            </>}
+            <Divider />
+
+            {/* <p style={{ marginBottom: "8px", fontSize: "medium", fontWeight: "bold" }}>结果透明度: {result_opacity * 100}%</p>
                 <div className={styles.opacitySliderContainer}>
                     <input className={styles.opacitySlider} type="range" min="0" max="1" step="0.05" value={result_opacity}
                         onChange={(event) => { setResultOpacity(event.target.value); }} />
@@ -174,12 +197,9 @@ function SideSpan({ service_option, setServiceOption,
                         {result_visible ? <FaEye /> : <FaEyeSlash />}
                     </button>
                 </div> */}
-                {base_option && service_option &&
-                    <button className={styles.sideSpanButton}
-                        onClick={() => setResultVisible(!result_visible)}>{result_visible ? "隐藏结果" : "显示结果"}</button>
-                }
 
-            </div>
+
+
 
 
         </div>
@@ -189,18 +209,22 @@ function SideSpan({ service_option, setServiceOption,
 function Intro() {
     return (
         <>
-            <h2 className={styles.introTitle}>三、历史现状评估——生态系统服务评估</h2>
+            <h1 className={styles.introTitle}>生态系统服务分析</h1>
             <div className={styles.introContent}>
-                <p>生态系统服务，指的是（ecosystem services）是指人类从生态系统获得的所有惠益，包括供给服务（如提供食物和水）、调节服务（如控制洪水和疾病）、文化服务（如精神、娱乐和文化收益）等。</p>
-                <p>湖州市南浔区是桑基鱼塘的保护区所在地之一，对其进行生态系统服务评估，可以帮助了解桑基鱼塘生态系统对周边社区和生态环境的影响，评估其在水资源供给、水质净化、生物多样性维护以及文化传承等方面的贡献，为制定保护区的管理政策和可持续利用提供科学依据。</p>
+                <p>生态系统服务（ecosystem services）是指人类从生态系统中获得的惠益，包括供给、调节、文化等服务，它们体现了人类社会与自然环境之间的相互依赖关系。</p>
+                <p>由于不同利益相关者（如农民、企业、游客）对生态系统服务的需求和看法有所差异，本研究在量化生态系统服务的基础上，也评估了各类利益相关者对生态系统服务的认知与态度。</p>
                 <div className={styles.introlist} >
-                    <p>1. <b>左侧地图：</b>展示湖州市南浔区的生态系统服务分析。
-                        <b>服务：</b>供给服务、调节服务、文化服务。</p>
-                    <p>2. <b>右侧地图：</b>展示不同主体/利益相关者对于不同生态系统服务的热点分析。
-                        <b>主体：</b>农民、企业、游客；</p>
-                    <p>3. 展示不同主体/利益相关者对不同生态系统服务的态度。
-                        <li>将热点分析视为权重，处理生态系统服务，即可得到：<b>该利益相关者对该服务的态度。共9个结果。</b></li>
+                    <p><b>1. 湖州乡村地区生态系统服务</b>
+                        (待补充)
                     </p>
+                    <p><b>2. 湖州南浔桑基鱼塘景观生态系统服务</b>
+                        <ul>
+                            <li><b>左图：</b>展示湖州南浔桑基鱼塘景观的生态系统服务。
+                                <b>服务：</b>供给服务、调节服务、文化服务。</li>
+                            <li><b>右图：</b>结合不同利益相关者<b>（农民、企业和游客）</b>对生态系统服务的态度所得到的生态系统服务量化结果，并进行了相应的热点分析。</li>
+                        </ul>
+                    </p>
+
                 </div>
             </div>
         </>

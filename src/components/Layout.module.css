@@ -1,11 +1,11 @@
+.layout{
+    width:auto;
+}
 .allContainer {
     display: flex;
     flex-direction: row;
     min-height: 100vh;
-    min-width: 1440px;
-    width: 100vw;
-    overflow: auto;
-
+    min-width: 1260px;
 }
 
 .layoutContainer {
@@ -16,7 +16,7 @@
     padding-top: 5%;
     box-sizing: border-box;
 }
-@media (max-width: 1600px) {
+@media screen and (max-width: 1600px) {
     .layoutContainer {
         /* padding-left: calc(3% - 50px); 当屏幕宽度小于1600px时，减少左侧边距 */
         padding-left: calc(1%); /* 当屏幕宽度小于1600px时，减少左侧边距 */

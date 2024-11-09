@@ -1,0 +1,40 @@
+.sideMenu {
+    background-color: #e0e0e0;
+}
+.collapseButton {
+    display: block;
+    margin: 10px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color:black !important;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    transition: all 0.3s ease; /* 过渡效果 */
+}
+.collapseButton:hover {
+    background-color: #777; /* 悬停效果 */
+}
+
+.dropdownItem {
+    display: block;
+    /* margin-left:20px; */
+    text-decoration: none;
+    transition: all 0.3s ease; /* 过渡效果 */
+}
+.dropdownItemActive {
+    display: block;
+    padding: 5px 10px;
+    /* margin-left:30px; */
+    text-decoration: none;
+    color:white !important;
+    border-radius: 5px;
+    background-color: #333;
+    transition: all 0.3s ease; /* 过渡效果 */
+}
+
+.dropdownItem:hover {
+    background-color: #e0e0e0; /* 悬停效果 */
+}
+.dropdownItemActive:hover {
+    background-color: #777; /* 悬停效果 */
+}

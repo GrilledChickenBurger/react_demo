@@ -249,15 +249,15 @@ export default function Branch3Map(props) {
     // }, [view, cur_option, cur_year]);
 
     function update_cur_layergroup(name) {
-        if (record_layergroup.title == name) {
+        if (record_layergroup.id == name) {
             console.log("图层组一致，无需更新图层组。");
             return;
         }
-        console.log("准备更新图层组，当前图层组：" + record_layergroup.title +
+        console.log("准备更新图层组，当前图层组：" + record_layergroup.id +
             " 目标图层组：" + name);
         let new_layergroup; let isfind = false;
         for (const element of view.map.layers) {
-            if (element.title == name) {
+            if (element.id == name) {
                 new_layergroup = element;
                 isfind = true;
                 break;
@@ -272,7 +272,7 @@ export default function Branch3Map(props) {
         new_layergroup.visible = true;
         record_layergroup = new_layergroup;
         is_layergroup_change = true;
-        console.log("成功更新图层组，当前图层组：" + record_layergroup.title + 
+        console.log("成功更新图层组，当前图层组：" + record_layergroup.id + 
             "is layergroup change: " + is_layergroup_change);
         
         console.log("------------------------------");
@@ -280,7 +280,7 @@ export default function Branch3Map(props) {
     }
 
     function update_cur_tif_layergroup() {
-        if (record_tif1_layergroup.title == "service1" && record_tif2_layergroup.title == "service2") {
+        if (record_tif1_layergroup.id == "service1" && record_tif2_layergroup.id == "service2") {
             console.log("TIF图层组一致，无需更新图层组。");
             return;
         }
@@ -290,7 +290,7 @@ export default function Branch3Map(props) {
         record_tif2_layergroup.visible = false;
         record_tif1_layergroup = service_group1;
         record_tif2_layergroup = service_group2;
-        console.log("成功更新TIF图层组，当前图层组：" + record_tif1_layergroup.title + " " + record_tif2_layergroup.title);
+        console.log("成功更新TIF图层组，当前图层组：" + record_tif1_layergroup.id + " " + record_tif2_layergroup.id);
         console.log("------------------------------");
 
     }

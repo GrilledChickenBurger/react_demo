@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Input } from 'antd';
-
+import { MdMenu, MdClose } from "react-icons/md";
 import styles from './Header.module.css'
 
 const { Search } = Input;
 
 
 function Header() {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isNavOpen, setNavOpen] = useState(false);
   // 切换下拉列表的状态
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -22,10 +22,16 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <h1 style={{textWrap:'nowrap', fontSize: '2rem'}}>地理设计平台原型系统</h1>
-      <nav className={styles.navbar}>
-        <a href="/">主页</a>
-        {/* <div className={styles.dropdownContainer}>
+      <div className={styles.headerContent}>
+        <h1 style={{ textWrap: 'nowrap', fontSize: '2rem' }}>
+          <NavLink to="/">地理设计平台原型</NavLink>
+        </h1>
+        <nav className={styles.navbar}>
+          <div className={styles.navbarBtn} onClick={() => setNavOpen(!isNavOpen)}>
+            {(!isNavOpen) ? <MdMenu /> : <MdClose />}
+          </div>
+          <div className={`${styles.navbarItems} ${isNavOpen ? styles.navbarOpen : ''}`}>
+            {/* <div className={styles.dropdownContainer}>
           <a href="#" onClick={toggleDropdown}>数据评估</a>
           {isDropdownOpen && (
             <div className={styles.dropdown}>
@@ -35,12 +41,15 @@ function Header() {
             </div>
           )}
         </div> */}
-        <a href="#">关于</a>
-        <a href="#">联系我们</a>
-        <Search placeholder="输入搜索内容"
+            <a href="#">关于我们</a>
+            <a href="#">联系我们</a>
+            {/* <Search placeholder="输入搜索内容"
           enterButton="搜索"
-          size="large" onSearch={value => console.log(value)} />
-      </nav>
+          size="large" onSearch={value => console.log(value)} /> */}
+          </div>
+        </nav>
+      </div>
+
     </header>
 
   );

@@ -13,15 +13,12 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
+  width:auto;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  display: flex;
-  flex-direction: column; 
-  min-height: 100%; /* 使根元素占满整个视口高度 */
 }
 
 a {
@@ -36,9 +33,7 @@ a:hover {
 body {
   margin: 0;
   padding: 0;
-  display: flex;
-  place-items: top center;
-  /* min-width: 100vw; */
+  width:auto;
   min-height: 100vh;
   background-attachment: fixed;
 }

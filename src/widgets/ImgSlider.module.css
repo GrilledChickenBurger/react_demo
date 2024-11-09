@@ -1,0 +1,9 @@
+.imgSliderItem{
+    width:auto;
+    height:auto;
+}
+.img{
+    max-height: 40vh;
+    object-fit: contain;
+    margin-inline: auto;
+}

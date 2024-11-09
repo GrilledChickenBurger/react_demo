@@ -8,10 +8,13 @@ import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 
 import BaseMapview from './BaseMapview.jsx';
-import { huzhou_group, huzhou_lpi, idx } from '../data/branch2_huzhou_shp.jsx';
-import { lu_group, edges } from '../data/branch2_nanxun_shp.jsx';
+import {
+    huzhou_group, huzhou_ids,
+    huzhou_lpi, idx
+} from '../data/branch2_huzhou.jsx';
+import { lu_group, nanxun_ids, edges } from '../data/branch2_nanxun_shp.jsx';
 import { tif_group } from '../data/branch2_nanxun_tif.jsx';
-import { local_group } from '../data/branch2_local_tif.jsx';
+import { local_group, local_ids } from '../data/branch2_local_tif.jsx';
 
 import styles from './Branch2Map.module.css'
 import Expand from '@arcgis/core/widgets/Expand.js';
@@ -43,7 +46,7 @@ let record_layerview;
 
 export default function Branch2Map(props) {
     let { mapProps, viewProps } = props;
-    let { cur_year, cur_dynasty, cur_option,
+    let { cur_year, cur_option,
         tif_opacity, tif_visible,
         shp_opacity, shp_visible } = viewProps;
 
@@ -125,15 +128,15 @@ export default function Branch2Map(props) {
 
     // 在year变化时，更新景观格局指数信息
     useEffect(() => { 
-        if (!view || !cur_option) return;
-        const tmpyear = cur_year.toString();
+        if (!view || !cur_option || !cur_option.startsWith("huzhou")) return;
+        const tmpyear = huzhou_ids[cur_year];
         // 检查 cur_year 是否是 huzhou_lpi 的一个键
         const tmpyear_info = huzhou_lpi[tmpyear];
         if (!tmpyear_info) { 
             console.log("未找到对应年份信息。");
             return; // 中止后续代码执行
         } else {
-            console.log("找到对应年份信息。");
+            console.log("找到对应年份信息。年份："+tmpyear);
         }
 
         const tmpdict = idx.map((item, index) => 
@@ -186,21 +189,24 @@ export default function Branch2Map(props) {
     // CORE FUNCTIONS
     // 在option、year、dynasty变化时，更新当前图层组和当前图层
     useEffect(() => {
-        if (!view || !cur_option || !cur_year) return;
+        if (!view || !cur_option || cur_year == undefined || cur_year == null) return;
+        let true_id =
+            cur_option.includes("huzhou") ? huzhou_ids[cur_year] || huzhou_ids[0] :
+            cur_option.includes("local") ? local_ids[cur_year] || local_ids[0] :
+                    nanxun_ids[cur_year] || nanxun_ids[0];
         console.log("option changed: ", cur_option,
-            " year changed: ", cur_year, " dynasty changed: ", cur_dynasty);
-        
+            " year changed: ", cur_year, " true_id: ", true_id);
         console.log("###################################");
         is_layergroup_change = false;
         update_cur_layergroup(cur_option);
-        (record_layergroup.title == "local_ancient") ?
-            update_cur_layer(cur_dynasty, is_layergroup_change) :   //在图层组更新后，强制更新当前图层
-            update_cur_layer(cur_year, is_layergroup_change);
 
-        if (cur_option.startsWith("landuse") || cur_option === 'ALL') {
+        update_cur_layer(true_id, is_layergroup_change);   //在图层组更新后，强制更新当前图层
+
+
+        if (cur_option.startsWith("nanxun")) {
             update_cur_tif_layergroup();
             record_tif_layer = initial_layer;
-            update_cur_tif_layer(cur_year);
+            update_cur_tif_layer(true_id);
             edges.visible = true;
             update_cur_layerview();
         }
@@ -213,10 +219,10 @@ export default function Branch2Map(props) {
         if (reactRootRef.current) {
             reactRootRef.current.render(<>
                 <li style={{ fontSize: "medium" }}>{record_layer.title}</li>
-                {record_tif_layer.visible && <li style={{ fontSize: "medium" }}>{record_tif_layer.title}</li>}
+                {cur_option.startsWith("nanxun") && <li style={{ fontSize: "medium" }}>{record_tif_layer.title}</li>}
                 </>);
         }
-    }, [view, cur_option, cur_year, cur_dynasty]);
+    }, [view, cur_option, cur_year]);
 
     // 若当前图层组=南浔，则修改当前图层的可见性和透明度
     useEffect(() => {
@@ -224,11 +230,11 @@ export default function Branch2Map(props) {
         // 若不加cur_option，就会在未选择任何选项时，提前改变landuse和tif的可见性
         if (!view || !cur_option) return;
         view.map.layers.forEach((layer) => {
-            if (layer.title == "landuse") {
+            if (layer.id == "nanxun_landuse") {
                 layer.opacity = shp_opacity;
                 layer.visible = shp_visible;
             }
-            if (layer.title == "tif") {
+            if (layer.id == "nanxun_tif") {
                 layer.opacity = tif_opacity;
                 layer.visible = tif_visible;
             }
@@ -275,18 +281,15 @@ export default function Branch2Map(props) {
 
 
     function update_cur_layergroup(name) {
-        if (name.startsWith("landuse") || name === 'ALL') {
-            name = "landuse";
-        }
-        if (record_layergroup.title == name) {
+        if (record_layergroup.id == name) {
             console.log("图层组一致，无需更新图层组。is layergroup change: " + is_layergroup_change);
             return;
         }
-        console.log("准备更新图层组，当前图层组：" + record_layergroup.title +
+        console.log("准备更新图层组，当前图层组：" + record_layergroup.id +
             " 目标图层组：" + name);
         let new_layergroup; let isfind = false;
         for (const element of view.map.layers) {
-            if (element.title == name) {
+            if (element.id == name) {
                 new_layergroup = element;
                 isfind = true;
                 break;
@@ -301,22 +304,22 @@ export default function Branch2Map(props) {
         new_layergroup.visible = true;
         record_layergroup = new_layergroup;
         is_layergroup_change = true;
-        console.log("成功更新图层组，当前图层组：" + record_layergroup.title +
+        console.log("成功更新图层组，当前图层组：" + record_layergroup.id +
             " is layergroup change: " + is_layergroup_change);
         
         console.log("----------------------------");
     }
 
     function update_cur_tif_layergroup() {
-        if (record_tif_layergroup.title == 'tif') {
+        if (record_tif_layergroup.id == 'nanxun_tif') {
             console.log("图层组一致，无需更新图层组。");
             return;
         }
 
-        console.log("准备更新TIF图层组，当前图层组：" + record_tif_layergroup.title);
+        console.log("准备更新TIF图层组，当前图层组：" + record_tif_layergroup.id);
         tif_group.visible = true;
         record_tif_layergroup = tif_group;
-        console.log("成功更新TIF图层组，当前图层组：" + record_tif_layergroup.title);
+        console.log("成功更新TIF图层组，当前图层组：" + record_tif_layergroup.id);
         console.log("------------------------------");
 
     }

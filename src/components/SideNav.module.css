@@ -1,11 +1,13 @@
 .navbarContent {
-    width:12vw;
-    min-width: 200px; 
-    min-height: 50%; /* 充满整个高度 */
+
+    max-width:12vw;
+    min-width: 60px;
+    /* min-width: 200px;  */
+    /* min-height: 50%; 充满整个高度 */
     background-color: #f0f0f0; 
-    padding: 20px; 
-    /* position: fixed; 固定位置 */
-    overflow-y: auto; /* 纵向滚动 */
+    padding: 20px 20px 60px 20px; /* 上、右、下、左 */
+
+    transition: all 0.3s ease; /* 动画效果 */
 }
 
 
@@ -14,9 +16,10 @@
     flex-direction: column; /* 纵向排列 */
 }
 .navbarItem{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: center;
+
 }
 .navbarItem a {
     margin: 10px 0;
@@ -24,12 +27,29 @@
     color: #333;
 }
 .navbarIcon {
+    height: 100%;
+    min-width: 30px;
+    min-height: 40px;
     margin-right: 10px;
+    align-content: center;
+}
+.headerIcon{
+    cursor: pointer;
+    border:black 1px solid;
+    padding: 2px;
+    border-radius: 3px;
+}
+.headerIcon:hover{
+    border:black 2px solid;
 }
 
+.navbarText{
+    font-weight: 600;
+}
 
 .dropdownContainer {
     position: relative; /* 为下拉菜单提供定位上下文 */
+    transition: all 0.3s ease; /* 动画效果 */
 }
   
 .dropdown {
@@ -67,3 +87,7 @@
 .dropdownItemActive:hover {
     background-color: #777; /* 悬停效果 */
 }
+.collapsed {
+    width: 50px; /* 或其他适合的宽度 */
+}
+

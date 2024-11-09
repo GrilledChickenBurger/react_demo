@@ -1,8 +1,9 @@
 import { Outlet } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import Header from "./Header";
 import SideNav from "./SideNav";
+import SideMenu from "./SideMenu.jsx";
 import Footer from "./Footer";
 import styles from "./Layout.module.css";
 
@@ -13,11 +14,12 @@ import { VersionContext } from '../App_nav.jsx';
 export default function Layout() {
     const version = useContext(VersionContext);
 
-    return (<>
+    return (<div className={styles.layout}>
         <Header />
         <div className={styles.allContainer}>
             <div className={styles.layoutContainer}>
-                <SideNav />
+                {/* <SideNav /> */}
+                <SideMenu />
             </div>
             <div className={styles.mainContainer}>
                 <Outlet />
@@ -26,6 +28,6 @@ export default function Layout() {
 
         <Footer version={version}/>
 
-        </>
+        </div>
     );
 }

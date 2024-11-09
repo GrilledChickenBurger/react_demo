@@ -24,7 +24,7 @@ const tif_2024 = new ImageryTileLayer({
     id: '2024',
 });
 export const tif_group = new GroupLayer({
-    title: 'tif',
+    id: 'nanxun_tif',
     layers: [tif_1960, tif_1970, tif_2020, tif_2024],
     visibilityMode: 'exclusive',
     visible: false,

@@ -4,8 +4,8 @@
     justify-content: center;
     align-items: flex-end;
 
-    height: 50px;
-    width:100vw;
+    min-height: 50px;
+    width:auto;
     box-sizing: border-box; /* 让宽度包含padding和border */
     margin-bottom: 0px;
 

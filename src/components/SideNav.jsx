@@ -1,37 +1,77 @@
 import styles from './SideNav.module.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaHome, FaChartBar, FaInfoCircle } from "react-icons/fa";
+import { FaHome, FaChartBar, FaInfoCircle, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { FaRegMessage } from "react-icons/fa6";
+import { AiOutlineMenu } from "react-icons/ai";
+
+import { addr } from '../router';
 
 export default function SideNav() {
     const [isDropdownOpen, setDropdownOpen] = useState(true);
+    const [isCollapsed, setCollapsed] = useState(false); 
 
-    let dropdownItems = [
-        { value: "s1", label: "可持续评估", href: "/analysis/branch1" },
-        { value: "s2", label: "景观格局", href: "/analysis/branch2" },
-        { value: "s3", label: "生态系统服务", href: "/analysis/branch3" },
-        { value: "s4", label: "格局-服务关系分析", href: "/analysis/branch4" },
-        { value: "s5", label: "空间优化", href: "/analysis/branch5" },
-    ];
+    let dropdownItems = addr;
+
+    const handleCollapse = () => {
+        setCollapsed(!isCollapsed);
+        console.log("导航栏收缩状态："+isCollapsed);
+    }
+    useEffect(() => { 
+        console.log("切换下拉框。导航栏收缩状态：" + isCollapsed);
+        let navtext = document.getElementsByClassName("navbarText");
+        console.log(navtext.length);
+        
+        if (isCollapsed) {
+            console.log("导航栏收缩，下拉框收缩");
+            Array.from(navtext).forEach(item => {
+                // item.style.visibility = 'hidden';
+                item.style.display='none';
+            });
+            setDropdownOpen(false);
+        }
+        else {
+            console.log("导航栏展开，下拉框展开");
+            Array.from(navtext).forEach(item => {
+                // item.style.visibility = 'visible';
+                item.style.display='block';
+            });
+            setDropdownOpen(true);
+        }
+    }, [isCollapsed]);
 
     return (
-        <aside className={styles.navbarContent}>
-            <h1 style={{ fontSize: '1rem' }}>导航栏</h1>
+        <aside className={`${styles.navbarContent} ${isCollapsed ? styles.collapsed : ''}`}>
+            <div className={styles.navbarItem}>
+                <div className={`${styles.navbarIcon} ${styles.headerIcon}`}
+                    onClick={handleCollapse}
+                >
+                    <AiOutlineMenu />
+                </div>
+                <h1 style={{ fontSize: '1rem' }}>导航栏</h1>
+                {/* <span onClick={handleCollapse} style={{ cursor: 'pointer', marginLeft: '8px' }}>
+                    {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+                </span> */}
+            </div>
             <hr style={{ width: "100%", height: "1px", backgroundColor: "gray" }} />
             
             <nav className={styles.navbar}>
                 <div className={styles.navbarItem}>
-                    <FaHome className={ styles.navbarIcon } />
-                    <a href="/">主页</a>
+                    <div className={styles.navbarIcon}>
+                        <FaHome />
+                    </div>
+                    <a href="/" className='navbarText'>主页</a>
                 </div>
 
                 <div className={styles.dropdownContainer}>
                     <div className={styles.navbarItem}>
-                        <FaChartBar className={styles.navbarIcon} />
+                        <div className={styles.navbarIcon}>
+                            <FaChartBar />
+                        </div>
                         <a href="#" onClick={() => { setDropdownOpen(!isDropdownOpen) }}
-                            className={styles.dropdownToggle}>
-                        数据分析</a>
+                             className='navbarText'>
+                            基于景观可持续的地理设计
+                        </a>
                     </div>
                     {isDropdownOpen && (
                         <div className={styles.dropdown}>
@@ -49,8 +89,10 @@ export default function SideNav() {
                 </div> */}
 
                 <div className={styles.navbarItem}>
-                    <FaRegMessage className={ styles.navbarIcon } />
-                    <a href="#">联系我们</a>
+                    <div className={styles.navbarIcon}>
+                        <FaRegMessage />
+                    </div>
+                    <a href="#"  className='navbarText'>联系我们</a>
 
                 </div>
             </nav>
